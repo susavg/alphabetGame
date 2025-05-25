@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Circle Game</title>
+    <link rel="stylesheet" href="henkel-styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen" style="display: flex;">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h3>Loading Game...</h3>
+        </div>
+    </div>
+
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen" class="welcome-screen" style="display: none;">
+        <div class="welcome-container">
+            <div class="welcome-header">
+                <div class="welcome-logo" id="welcomeLogo">
+                    <!-- Logo will be loaded from config -->
+                </div>
+                <h1 class="welcome-title" id="gameTitle"></h1>
+                <p class="welcome-subtitle" id="gameSubtitle"></p>
+            </div>
+            
+            <div class="welcome-content">
+                <div class="game-rules">
+                    <h3>🎯 How to Play</h3>
+                    <div class="rules-grid">
+                        <div class="rule-item">
+                            <h4>🏆 The Challenge</h4>
+                            <p>Answer business-related questions for each letter A-Z. Each letter has a specific definition to complete.</p>
+                        </div>
+                        <div class="rule-item">
+                            <h4>⏰ Time Pressure</h4>
+                            <p>You have <span id="welcomeTimeLimit"></span> to complete all 26 questions. Quick thinking and business knowledge are key!</p>
+                        </div>
+                        <div class="rule-item">
+                            <h4>🎮 Controls</h4>
+                            <p><strong>Answer:</strong> Type and press Enter<br><strong>Pass:</strong> Skip to next question<br><strong>Hint:</strong> Get first letter + length (<span id="welcomeMaxHints"></span> max)</p>
+                        </div>
+                        <div class="rule-item">
+                            <h4>🧠 Smart Matching</h4>
+                            <p>Don't worry about exact spelling! The system accepts similar answers and provides helpful hints when you're close.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="scoring-table">
+                        <h4>📊 Scoring System</h4>
+                        <div class="scoring-row">
+                            <span>Correct Answer</span>
+                            <span id="correctPoints" class="correct-score"></span>
+                        </div>
+                        <div class="scoring-row">
+                            <span>Incorrect Answer</span>
+                            <span id="incorrectPoints" class="incorrect-score"></span>
+                        </div>
+                        <div class="scoring-row">
+                            <span>Pass (Skip)</span>
+                            <span id="pasapalabraPoints" class="warning-score"></span>
+                        </div>
+                        <div class="scoring-row">
+                            <span>Time Bonus (<span id="timeBonusThreshold"></span>+ correct)</span>
+                            <span id="maxTimeBonus" class="correct-score"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="warning" onclick="startPreview()">👁️ PREVIEW QUESTIONS</button>
+                    <button onclick="startGame()">🚀 START CHALLENGE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Container -->
+    <div id="gameContainer" class="game-container">
+        <div class="game-header">
+            <h1 id="gameHeaderTitle"></h1>
+            <h2 id="gameHeaderSubtitle"></h2>
+        </div>
+
+        <!-- Game Stats -->
+        <div class="game-stats">
+            <div class="stat-item">
+                <div class="stat-label">Correct</div>
+                <div class="stat-value" id="correctCount">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Incorrect</div>
+                <div class="stat-value" id="incorrectCount">0</div>
+            </div>
+            <div id="timer"></div>
+            <div class="stat-item">
+                <div class="stat-label">Points</div>
+                <div class="stat-value" id="pointsCount">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Hints Left</div>
+                <div class="stat-value hints-left"></div>
+            </div>
+        </div>
+
+        <!-- Rosco (Letter Circle) -->
+        <div class="rosco-container">
+            <div class="rosco" id="rosco">
+                <!-- Letters will be dynamically created here -->
+            </div>
+            <div class="current-letter" id="currentLetterDisplay"></div>
+            <div class="center-image">
+                <div id="centerLogo">
+                    <!-- Logo will be loaded from config -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Info Panel -->
+        <div class="game-info">
+            <p id="definition">Loading game...</p>
+            <div id="fuzzyHint" class="fuzzy-hint" style="display: none;">
+                🤔 Close! Try a similar word or check your spelling.
+            </div>
+        </div>
+
+        <!-- Input and Controls -->
+        <div class="input-container">
+            <input type="text" id="answer" placeholder="Type your answer here..." autocomplete="off">
+        </div>
+
+        <div class="btn-container">
+            <button onclick="game.checkAnswer()">✓ SUBMIT</button>
+            <button class="warning" onclick="game.pasapalabra()">⏭️ PASS</button>
+            <button class="warning" onclick="game.showHint()">💡 HINT</button>
+            <button onclick="game.newGame()">🔄 NEW GAME</button>
+        </div>
+
+        <!-- Final Score -->
+        <div id="finalScore"></div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <button id="viewResults" onclick="game.showResults()" style="display: none;">📊 VIEW DETAILED RESULTS</button>
+        </div>
+
+        <!-- Results Panel -->
+        <div id="results" style="display: none;"></div>
+    </div>
+
+    <script src="gameUtils.js"></script>
+    <script src="wordCircleGame.js"></script>
+    <script>
+        // Global functions
+        function startGame() {
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('gameContainer').style.display = 'block';
+            game.newGame();
+        }
+
+        function startPreview() {
+            game.startPreview();
+        }
+
+        // Initialize game when page loads
+        window.addEventListener('load', async () => {
+            try {
+                await game.init();
+                // Auto-focus on welcome screen
+                setTimeout(() => {
+                    const startButton = document.querySelector('button[onclick="startGame()"]');
+                    if (startButton) startButton.focus();
+                }, 100);
+            } catch (error) {
+                console.error('Failed to initialize game:', error);
+                document.getElementById('loadingScreen').innerHTML = '<div class="loading-content"><h3 style="color: red;">Error loading game. Please check console.</h3></div>';
+            }
+        });
+    </script>
+</body>
+</html>

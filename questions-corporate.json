@@ -1,0 +1,314 @@
+{
+    "A": [
+        {
+            "word": "Automation",
+            "definition": "What word means using technology to make processes automatic, helping us deliver net price guidance?",
+            "answers": ["Automation", "Automatization", "Auto"]
+        },
+        {
+            "word": "Analytics",
+            "definition": "What process helps us understand data to make better pricing decisions?",
+            "answers": ["Analytics", "Analysis", "Analyze"]
+        }
+    ],
+    "B": [
+        {
+            "word": "Bigger",
+            "definition": "In our strategy, we aim to make net sales and GP1 what?",
+            "answers": ["Bigger", "Better", "Boost"]
+        },
+        {
+            "word": "Brand",
+            "definition": "What represents our company identity and product recognition?",
+            "answers": ["Brand", "Business", "Banner"]
+        }
+    ],
+    "C": [
+        {
+            "word": "Coupon",
+            "definition": "Which promo mechanic gives a direct price discount to consumers?",
+            "answers": ["Coupon", "Cashback", "Cut"]
+        },
+        {
+            "word": "Consumer",
+            "definition": "Who is the end user of our products?",
+            "answers": ["Consumer", "Customer", "Client"]
+        }
+    ],
+    "D": [
+        {
+            "word": "Discount",
+            "definition": "What reduction in price helps drive sales volume?",
+            "answers": ["Discount", "Deal", "Drop"]
+        },
+        {
+            "word": "Data",
+            "definition": "What information helps us make informed pricing decisions?",
+            "answers": ["Data", "Details", "Digits"]
+        }
+    ],
+    "E": [
+        {
+            "word": "Elasticity",
+            "definition": "What word describes how much the quantity sold changes when the price changes?",
+            "answers": ["Elasticity", "Efficacy", "Effect"]
+        },
+        {
+            "word": "Earnings",
+            "definition": "A term for profit after subtracting all costs?",
+            "answers": ["Earnings", "Excess", "Edge"]
+        }
+    ],
+    "F": [
+        {
+            "word": "Fair",
+            "definition": "A price is what when it is competitive in the market?",
+            "answers": ["Fair", "Fit", "Firm"]
+        },
+        {
+            "word": "Forecast",
+            "definition": "What prediction helps us plan future sales and pricing?",
+            "answers": ["Forecast", "Future", "Forward"]
+        }
+    ],
+    "G": [
+        {
+            "word": "Global",
+            "definition": "What word refers to our Net Revenue Management colleagues who define the tools at the worldwide level?",
+            "answers": ["Global", "Group", "General"]
+        },
+        {
+            "word": "Growth",
+            "definition": "What increase do we aim for in our business metrics?",
+            "answers": ["Growth", "Gain", "Goal"]
+        }
+    ],
+    "H": [
+        {
+            "word": "Hypercare",
+            "definition": "A special intense focus on a category or customer?",
+            "answers": ["Hypercare", "Handling", "Help"]
+        },
+        {
+            "word": "Hybrid",
+            "definition": "What type of strategy combines multiple approaches?",
+            "answers": ["Hybrid", "Holistic", "Harmonized"]
+        }
+    ],
+    "I": [
+        {
+            "word": "Index",
+            "definition": "A metric comparing prices to competitors?",
+            "answers": ["Index", "Indicator", "Insight"]
+        },
+        {
+            "word": "Innovation",
+            "definition": "What drives new solutions and improvements in our processes?",
+            "answers": ["Innovation", "Initiative", "Improvement"]
+        }
+    ],
+    "J": [
+        {
+            "word": "Jump",
+            "definition": "What word describes the continued increase in GP1 over the last years?",
+            "answers": ["Jump", "Jumping", "Jumpstart"]
+        },
+        {
+            "word": "Journey",
+            "definition": "What path do customers take from awareness to purchase?",
+            "answers": ["Journey", "Job", "Joint"]
+        }
+    ],
+    "K": [
+        {
+            "word": "KPI",
+            "definition": "A measure of performance?",
+            "answers": ["KPI", "Key", "Kind"]
+        },
+        {
+            "word": "Knowledge",
+            "definition": "What expertise helps us make better business decisions?",
+            "answers": ["Knowledge", "Know-how", "Key"]
+        }
+    ],
+    "L": [
+        {
+            "word": "Leverage",
+            "definition": "What word means to use your strengths or resources to get an advantage?",
+            "answers": ["Leverage", "Lead", "Launch"]
+        },
+        {
+            "word": "Launch",
+            "definition": "What do we do when introducing a new product to market?",
+            "answers": ["Launch", "Lead", "Lift"]
+        }
+    ],
+    "M": [
+        {
+            "word": "Margin",
+            "definition": "The expected profit from a sale?",
+            "answers": ["Margin", "Mark", "Mark-up"]
+        },
+        {
+            "word": "Market",
+            "definition": "Where do we compete and sell our products?",
+            "answers": ["Market", "Marketplace", "Medium"]
+        }
+    ],
+    "N": [
+        {
+            "word": "Net",
+            "definition": "Revenue after deductions?",
+            "answers": ["Net", "Nominal", "Nett"]
+        },
+        {
+            "word": "NRM",
+            "definition": "What does our department specialize in? (Net Revenue...)",
+            "answers": ["NRM", "Net", "Network"]
+        }
+    ],
+    "O": [
+        {
+            "word": "Order",
+            "definition": "What word means the requests customers make to buy products, helping build our sales?",
+            "answers": ["Order", "Offer", "Opportunity"]
+        },
+        {
+            "word": "Optimization",
+            "definition": "What process makes our pricing and promotions more effective?",
+            "answers": ["Optimization", "Operation", "Objective"]
+        }
+    ],
+    "P": [
+        {
+            "word": "Promotion",
+            "definition": "A temporary price reduction to boost sales?",
+            "answers": ["Promotion", "Price-cut", "Push"]
+        },
+        {
+            "word": "Pricing",
+            "definition": "What strategy determines how much customers pay?",
+            "answers": ["Pricing", "Price", "Premium"]
+        }
+    ],
+    "Q": [
+        {
+            "word": "Quality",
+            "definition": "What word means how good our brands and products are, helping keep consumers loyal?",
+            "answers": ["Quality", "Quantity", "Quick"]
+        },
+        {
+            "word": "Quarter",
+            "definition": "What three-month period do we use for business reporting?",
+            "answers": ["Quarter", "Quota", "Query"]
+        }
+    ],
+    "R": [
+        {
+            "word": "Revenue",
+            "definition": "What total income do we generate from sales?",
+            "answers": ["Revenue", "Return", "Result"]
+        },
+        {
+            "word": "ROI",
+            "definition": "What metric measures return on investment?",
+            "answers": ["ROI", "Return", "Rate"]
+        }
+    ],
+    "S": [
+        {
+            "word": "Scope",
+            "definition": "What word means the area or range you look at to understand something?",
+            "answers": ["Scope", "Span", "Size"]
+        },
+        {
+            "word": "Strategy",
+            "definition": "What plan guides our long-term business decisions?",
+            "answers": ["Strategy", "System", "Structure"]
+        }
+    ],
+    "T": [
+        {
+            "word": "Team",
+            "definition": "What word means a group of people working together to achieve a goal?",
+            "answers": ["Team", "Tribe", "Taskforce"]
+        },
+        {
+            "word": "Target",
+            "definition": "What goal or objective do we aim to achieve?",
+            "answers": ["Target", "Task", "Total"]
+        }
+    ],
+    "U": [
+        {
+            "word": "Upsell",
+            "definition": "Raising the perceived value of a product?",
+            "answers": ["Upsell", "Upgrade", "Upscale"]
+        },
+        {
+            "word": "Unit",
+            "definition": "What individual item do we measure in sales volume?",
+            "answers": ["Unit", "User", "Usage"]
+        }
+    ],
+    "V": [
+        {
+            "word": "Valorization",
+            "definition": "What word do we use for the process of making our brands worth a higher price?",
+            "answers": ["Valorization", "Value", "Valuation"]
+        },
+        {
+            "word": "Volume",
+            "definition": "What quantity measurement is key to our sales success?",
+            "answers": ["Volume", "Velocity", "Visibility"]
+        }
+    ],
+    "W": [
+        {
+            "word": "Weekly",
+            "definition": "What word means sales happening every seven days?",
+            "answers": ["Weekly", "Wrap", "Watch"]
+        },
+        {
+            "word": "Win",
+            "definition": "What do we aim to do in competitive situations?",
+            "answers": ["Win", "Work", "Way"]
+        }
+    ],
+    "X": [
+        {
+            "word": "External",
+            "definition": "What word means coming from outside or not inside?",
+            "answers": ["External", "Extra", "Exit"]
+        },
+        {
+            "word": "Excellence",
+            "definition": "(Contains X) What standard of quality do we strive for?",
+            "answers": ["Excellence", "Expert", "Execute"]
+        }
+    ],
+    "Y": [
+        {
+            "word": "Yearly",
+            "definition": "What word means sales happening every year?",
+            "answers": ["Yearly", "Young", "Yield"]
+        },
+        {
+            "word": "Yield",
+            "definition": "What return or profit do we generate from our investments?",
+            "answers": ["Yield", "Year", "Yes"]
+        }
+    ],
+    "Z": [
+        {
+            "word": "Zero",
+            "definition": "What word means the point where costs and revenues are equal, so no profit or loss?",
+            "answers": ["Zero", "Zone", "Zenith"]
+        },
+        {
+            "word": "Zone",
+            "definition": "What geographic or market area do we focus on?",
+            "answers": ["Zone", "Zero", "Zoom"]
+        }
+    ]
+}
