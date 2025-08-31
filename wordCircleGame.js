@@ -381,15 +381,26 @@ showHintToast(text){
   }
 
   recalculateRoscoPositions(){
-    const letters=document.querySelectorAll('.letter'); if(!letters.length) return;
-    const cont=document.querySelector('.rosco-container'); if(!cont) return;
-
-    const cw=cont.offsetWidth, ch=cont.offsetHeight, r=Math.min(cw,ch)*.44, cx=cw/2, cy=ch/2;
-    letters.forEach((el,i)=>{
-      const ang=(i/letters.length)*2*Math.PI - Math.PI/2;
-      const x=Math.cos(ang)*r + cx - (el.offsetWidth/2);
-      const y=Math.sin(ang)*r + cy - (el.offsetHeight/2);
-      el.style.left=`${x}px`; el.style.top=`${y}px`;
+    const cont = document.querySelector('.rosco-container');
+    const letters = Array.from(document.querySelectorAll('.letter'));
+    if (!cont || !letters.length) return;
+  
+    const cw = cont.clientWidth;
+    const ch = cont.clientHeight;
+    const size = letters[0].offsetWidth || 56;   // letter is square
+    const gap  = Math.max(6, Math.round(size * 0.1)); // extra breathing room
+  
+    // Keep every letter fully inside the container
+    const r  = Math.min(cw, ch) / 2 - size / 2 - gap;
+    const cx = cw / 2;
+    const cy = ch / 2;
+  
+    letters.forEach((el, i) => {
+      const ang = (i / letters.length) * 2 * Math.PI - Math.PI / 2;
+      const x = cx + Math.cos(ang) * r - size / 2;
+      const y = cy + Math.sin(ang) * r - size / 2;
+      el.style.left = `${x}px`;
+      el.style.top  = `${y}px`;
     });
   }
 
