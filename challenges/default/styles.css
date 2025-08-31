@@ -26,6 +26,18 @@
 
 *{ box-sizing: border-box; }
 html, body{ height:100%; }
+/* kill horizontal panning on mobile entirely */
+/* No horizontal scroll, app-like vertical pan only */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+  overscroll-behavior-x: none;
+  touch-action: pan-y;
+  -webkit-font-smoothing: antialiased;
+}
+body, #welcomeScreen, #gameContainer {
+  min-height: 100svh; /* handles mobile dynamic toolbars */
+}
 body{
   margin:0;
   font-family: 'Open Sans', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -34,21 +46,11 @@ body{
   line-height: 1.55;
 }
 
-/* kill horizontal panning on mobile entirely */
-html, body{
-  max-width: 100%;
-  overflow-x: hidden;
-  touch-action: pan-y; /* only vertical scroll */
-}
 
-/* Make the shell full-bleed on phones (app look) */
+/* Full-bleed on phones (no rounded outer card) */
 @media (max-width: 768px){
-  .welcome-screen,
-  .game-container {
-    margin: 0;
-    border-radius: 0;
-  }
-  .compact-header { border-radius: 0; }
+  .welcome-screen, .game-container, .compact-header { border-radius: 0; }
+  .game-container { margin: 0; }
 }
 
 /* Only allow vertical panning (helps iOS) */
@@ -73,23 +75,18 @@ button:active{ transform: translateY(0); }
 button:disabled{ opacity:.55; cursor:not-allowed; box-shadow:none; }
 .btn-pass{ background: linear-gradient(135deg, var(--warning), #e67300); }
 
-/* ---------------------------------------
-   HARD-CODED green hint icon (clear & visible)
---------------------------------------- */
+
 .hint-icon{
   flex:0 0 auto;
   width:36px; height:36px; padding:0; min-width:auto;
-  display:inline-flex; align-items:center; justify-content:center; cursor:pointer;
-
-  background:#00A651 !important;     /* solid green */
-  color:#ffffff !important;           /* white icon */
+  display:inline-flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  background:#16a34a; color:#fff; border:0;
   border-radius:10px;
-  border:1px solid #008f44 !important;
-  box-shadow: 0 2px 8px rgba(0,0,0,.12);
+  box-shadow:0 6px 16px rgba(22,163,74,.35);
 }
 .hint-icon:hover{ filter:brightness(1.05); }
-.hint-icon svg{ color: currentColor !important; }
-.hint-icon svg path{ stroke: currentColor !important; }
+.hint-icon svg path{ stroke:#fff; fill:none; }
 
 /* ---------------------------------------
    Loading
@@ -218,14 +215,15 @@ button:disabled{ opacity:.55; cursor:not-allowed; box-shadow:none; }
 /* ---------------------------------------
    Rosco
 --------------------------------------- */
-/* Rosco scales with the viewport, but never exceeds desktop size */
+/* Rosco scales with viewport safely */
 .rosco-container{
   position: relative;
-  width: min(440px, 100vw - 24px); /* fit narrow phones */
-  aspect-ratio: 1 / 1;            /* square */
-  height: auto;                   /* let aspect-ratio drive height */
+  width: min(440px, 100vw - 24px);
+  aspect-ratio: 1 / 1;
+  height: auto;
   margin: 14px auto;
-  overflow: hidden;               /* clip inner glows so no overflow */
+  overflow: hidden;
+  touch-action: pan-y;      /* no horizontal drag */
 }
 
 
@@ -233,32 +231,40 @@ button:disabled{ opacity:.55; cursor:not-allowed; box-shadow:none; }
 
 .current-letter{
   position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-  font-size:84px; font-weight:900; color: var(--primary); opacity:.06; z-index:0;
+  font-size: clamp(48px, 20vw, 84px);
+  font-weight:900; color: var(--primary); opacity:.06; z-index:0;
 }
-/* Keep the center logo proportional when the rosco shrinks */
+/* Center logo inside the rosco */
 .center-image{
-  position: absolute;
-  left: 50%; top: 50%;
+  position: absolute;               /* <-- critical */
+  left: 50%;
+  top: 50%;
   transform: translate(-50%, -50%);
   width: 32%;
   height: 32%;
-  background: transparent;
-  border: 0;
-  box-shadow: none;
-  border-radius: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1;
+  z-index: 1;                       /* above .current-letter (z-index:0) */
+  pointer-events: none;             /* never intercept taps */
 }
-#centerLogo{ max-width: 100%; max-height: 100%; }
+
+#centerLogo{
+  max-width: 100%;
+  max-height: 100%;
+  display: block;
+}
 
 .letter{
-  position:absolute; width:56px; height:56px; border-radius:50%;
+  position:absolute;
+  width: clamp(42px, 12vw, 56px);
+  height: clamp(42px, 12vw, 56px);
+  border-radius:50%;
   background: linear-gradient(135deg, #fff, #f7f7f7);
-  border:2px solid #e4e4e4; color: var(--primary); font-weight:800; font-size:18px;
-  display:flex; align-items:center; justify-content:center; cursor: default;
-  box-shadow: var(--shadow-1);
+  border:2px solid #e4e4e4; color: var(--primary);
+  font-weight:800; font-size: clamp(14px, 3.6vw, 18px);
+  display:flex; align-items:center; justify-content:center;
+  cursor: default; box-shadow: var(--shadow-1);
   transition: transform var(--tr), box-shadow var(--tr), background var(--tr), color var(--tr), border-color var(--tr);
 }
 .letter.correct{
@@ -375,12 +381,15 @@ input#answer:focus{
 --------------------------------------- */
 .actionbar{ }
 @media (max-width: 768px){
-  .game-container{ padding-bottom: 160px; }
+  /* Reserve space so content never hides under the bar */
+  .game-container{ padding-bottom: calc(160px + env(safe-area-inset-bottom)); }
+
   .actionbar{
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 1000;
     background: var(--card-background);
-    border-top: 1px solid #e7e7e7; box-shadow: 0 -8px 24px rgba(0,0,0,.12);
-    padding: 12px 16px;
+    border-top: 1px solid #e7e7e7;
+    box-shadow: 0 -8px 24px rgba(0,0,0,.12);
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
   }
   .actionbar .game-info, .actionbar .input-container, .actionbar .btn-row{
     max-width: 760px; margin-left: auto; margin-right: auto;
@@ -437,18 +446,6 @@ input#answer:focus{
 }
 .hint-toast.show{ opacity:1; transform: translateY(0); }
 
-/* Hardcoded green hint icon – unmistakable */
-.hint-icon{
-  background:#16a34a !important;
-  color:#fff !important;
-  border:0 !important;
-  box-shadow:0 6px 16px rgba(22,163,74,.35) !important;
-}
-.hint-icon svg path{
-  stroke:#fff !important;
-  fill:none !important;
-}
-.hint-icon:hover{ filter:brightness(1.05); }
 
 /* Show a placeholder whenever the definition is temporarily empty */
 #actionBar #definition:empty::before{
@@ -457,3 +454,15 @@ input#answer:focus{
   font-style: italic;
   opacity: .9;
 }
+
+input#answer{
+  font-size: 16px; /* prevents iOS auto-zoom on focus */
+}
+
+/***** App-like: no accidental text selection *****/
+.no-select, .compact-header, .header-stats, .rosco-container, .letter, .actionbar {
+  -webkit-user-select: none; user-select: none;
+  -webkit-touch-callout: none;
+}
+/* Inputs remain selectable */
+input, textarea { -webkit-user-select: text; user-select: text; -webkit-touch-callout: default; }

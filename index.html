@@ -4,6 +4,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+  <!-- App / PWA feel -->
+  <meta name="theme-color" content="#E30613" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#C10511" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="/manifest.webmanifest"> <!-- optional if you have it -->
+  <link rel="apple-touch-icon" href="/icons/icon-192.png"> <!-- optional -->
+
+  <!-- Speed up font load -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
   <title>Word Circle Game</title>
 
   <!-- Single stylesheet used by all challenges -->
@@ -196,7 +208,17 @@
       </div>
 
       <div class="input-container">
-        <input type="text" id="answer" placeholder="Type your answer here..." autocomplete="off">
+        <input
+          type="text"
+          id="answer"
+          placeholder="Type your answer here..."
+          autocomplete="off"
+          autocapitalize="none"
+          autocorrect="off"
+          spellcheck="false"
+          enterkeyhint="done"
+          inputmode="text"
+        />
       </div>
 
       <div class="btn-row">
