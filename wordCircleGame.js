@@ -73,6 +73,31 @@ getRandomHint(cur){
   return list[idx];
 }
 
+buildAutoHints(item){
+    const ans = (item.word || (item.answers && item.answers[0]) || '').trim();
+    const first = ans.slice(0,1), last = ans.slice(-1), len = ans.length;
+  
+    // lightweight creative set using the definition + word form
+    return [
+      item.definition ? item.definition.replace(/\?+$/,'').trim() + '.' : 'Think simple, everyday word.',
+      `Starts with ${first.toUpperCase()} and ends with ${last.toUpperCase()}.`,
+      `Common word of ${len} letters.`,
+      `If stuck, say it out loud: it sounds like what it is.`
+    ];
+  }
+  
+  ensureHints(set){
+    if (!set || typeof set !== 'object') return;
+    for (const L of Object.keys(set)){
+      const list = Array.isArray(set[L]) ? set[L] : [];
+      list.forEach(it=>{
+        if (!Array.isArray(it.hints) || it.hints.length === 0){
+          it.hints = this.buildAutoHints(it);
+        }
+      });
+    }
+  }
+
 showHintToast(text){
   const t = document.getElementById('hintToast');
   if (!t) return alert(text); // fallback if the toast element isn't present
@@ -151,6 +176,9 @@ showHintToast(text){
 
     this.allWords    = await fetchJSON(qPath);
     this.previewWords= await fetchJSON(pPath);
+
+    this.ensureHints(this.allWords);
+    this.ensureHints(this.previewWords);
 
     await this.loadStyles();
     applyTheme(this.config.theme);
@@ -264,7 +292,7 @@ showHintToast(text){
     const bar = document.getElementById('actionBar');
     const gc  = document.getElementById('gameContainer');
     if (!bar || !gc) return;
-
+  
     const setBottomPadding = () => {
       if (matchMedia('(max-width: 768px)').matches) {
         gc.style.paddingBottom = Math.max(160, bar.offsetHeight + 24) + 'px';
@@ -273,10 +301,10 @@ showHintToast(text){
         bar.style.transform = '';
       }
     };
-
     setBottomPadding();
     window.addEventListener('resize', setBottomPadding);
-
+  
+    // Keyboard-aware reposition for the bar (kept)
     if (window.visualViewport) {
       const vv = window.visualViewport;
       const reposition = () => {
@@ -287,10 +315,25 @@ showHintToast(text){
       vv.addEventListener('scroll', reposition);
       window.addEventListener('orientationchange', reposition);
     }
-
+  
+    // NEW — freeze/unfreeze body scroll so the rosco doesn't jump
     const input = document.getElementById('answer');
-    input?.addEventListener('focus', () => setTimeout(setBottomPadding, 50));
-    input?.addEventListener('blur',  () => setTimeout(() => { bar.style.transform = ''; setBottomPadding(); }, 50));
+    let scrollY = 0;
+    const freeze = () => {
+      scrollY = window.scrollY || window.pageYOffset || 0;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = '100%';
+    };
+    const unfreeze = () => {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollY);
+    };
+  
+    input?.addEventListener('focus', () => { setTimeout(setBottomPadding, 50); freeze(); });
+    input?.addEventListener('blur',  () => { unfreeze(); setTimeout(() => { bar.style.transform = ''; setBottomPadding(); }, 50); });
   }
 
   newGame(){
