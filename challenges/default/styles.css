@@ -40,6 +40,9 @@ html, body {
 body, #welcomeScreen, #gameContainer {
   min-height: 100svh; /* handles mobile dynamic toolbars */
 }
+#gameContainer{
+  padding-top: var(--app-header-height);
+}
 body{
   margin:0;
   font-family: 'Open Sans', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
@@ -48,11 +51,8 @@ body{
   line-height: 1.55;
 }
 
-
-/* Full-bleed on phones (no rounded outer card) */
 @media (max-width: 768px){
-  .welcome-screen, .game-container, .compact-header { border-radius: 0; }
-  .game-container { margin: 0; }
+  .welcome-screen, .game-container { border-radius: 0; margin: 0; }
 }
 
 /* Only allow vertical panning (helps iOS) */
@@ -165,28 +165,27 @@ button:disabled{ opacity:.55; cursor:not-allowed; box-shadow:none; }
 
 /* Compact header */
 .compact-header{
-  position: sticky;
-  top: env(safe-area-inset-top, 0px); /* notch-friendly */
-  z-index: 1100;                      /* above the bottom action bar (1000) */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1100;
 
-  /* full-width bleed even inside a centered container */
-  margin-left:  calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
-  width: 100vw;
-
-  border-radius: 0;                   /* app look */
+  width: 100%;       /* no 100vw / negative margins needed */
+  margin: 0;
+  border-radius: 0;  /* no rounded corners on the header */
   box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  transform: translateZ(0); /* avoid iOS repaint glitches */
 }
 .header-top{
   display:flex; align-items:center; justify-content:space-between;
   background: linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 80%, #000));
-  color:#fff; padding:10px 14px;
-}
-.header-top{
+  color:#fff;
+  padding: 10px 14px;
   padding-top: calc(10px + env(safe-area-inset-top, 0px));
 }
-:root{ --app-header-height: 116px; } /* tune if your header height changes */
-html{ scroll-padding-top: var(--app-header-height); }
+:root{ --app-header-height: 120; } /* tune if your header height changes */
+html { scroll-padding-top: var(--app-header-height); }
 
 @media (max-width: 768px){
   .header-top,

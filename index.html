@@ -312,6 +312,24 @@
       }
     });
   </script>
+  <script>
+    function setHeaderHeightVar(){
+      const el = document.querySelector('.compact-header');
+      if(!el) return;
+      const h = el.offsetHeight;                 // includes safe-area padding
+      document.documentElement.style.setProperty('--app-header-height', h + 'px');
+    }
+  
+    // run on load and when things that can change height happen
+    window.addEventListener('load', setHeaderHeightVar);
+    window.addEventListener('resize', setHeaderHeightVar);
+    window.addEventListener('orientationchange', setHeaderHeightVar);
+    if (window.visualViewport) {
+      visualViewport.addEventListener('resize', setHeaderHeightVar);
+    }
+    // if fonts load late
+    document.fonts?.ready?.then(setHeaderHeightVar);
+  </script>
 
   <script>
     // ——— zoom lock helper ———
