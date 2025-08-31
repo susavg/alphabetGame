@@ -34,6 +34,29 @@ body{
   line-height: 1.55;
 }
 
+/* Lock the page to the viewport on mobile */
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;          /* prevent sideways scroll */
+  overscroll-behavior-x: none; /* stop iOS/Android horizontal bounce */
+}
+
+/* Make the shell full-bleed on phones (app look) */
+@media (max-width: 768px){
+  .welcome-screen,
+  .game-container {
+    margin: 0;
+    border-radius: 0;
+  }
+  .compact-header { border-radius: 0; }
+}
+
+/* Only allow vertical panning (helps iOS) */
+body, .game-container, .rosco-container {
+  touch-action: pan-y;
+}
+
 /* ---------------------------------------
    Generic buttons
 --------------------------------------- */
@@ -196,21 +219,36 @@ button:disabled{ opacity:.55; cursor:not-allowed; box-shadow:none; }
 /* ---------------------------------------
    Rosco
 --------------------------------------- */
+/* Rosco scales with the viewport, but never exceeds desktop size */
 .rosco-container{
-  position:relative; width: 440px; height: 440px; margin: 14px auto;
+  position: relative;
+  width: clamp(280px, 86vw, 440px);
+  height: clamp(280px, 86vw, 440px);
+  margin: 14px auto;
 }
-.rosco{ position:relative; width:100%; height:100%; }
+.rosco { position: relative; width: 100%; height: 100%; }
 
 .current-letter{
   position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
   font-size:84px; font-weight:900; color: var(--primary); opacity:.06; z-index:0;
 }
+/* Keep the center logo proportional when the rosco shrinks */
 .center-image{
-  position:absolute; left:50%; top:50%; transform: translate(-50%,-50%);
-  width:140px; height:140px; background: transparent; border:0; box-shadow:none; border-radius:0;
-  display:flex; align-items:center; justify-content:center; z-index:1;
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 32%;
+  height: 32%;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
 }
-#centerLogo{ max-width: 92%; max-height: 92%; }
+#centerLogo{ max-width: 100%; max-height: 100%; }
 
 .letter{
   position:absolute; width:56px; height:56px; border-radius:50%;
@@ -381,8 +419,6 @@ input#answer:focus{
 .actionbar.hidden{ display:none; }
 
 /* Hint toast (appears above the sticky bar) */
-.actionbar{ position: fixed; }             /* ensure fixed (already set on mobile) */
-.actionbar{ position: fixed; left:0; right:0; bottom:0; } /* safe re-assert */
 .hint-toast{
   position:absolute;
   left:16px; right:16px; bottom: calc(100% + 10px);
@@ -410,3 +446,11 @@ input#answer:focus{
   fill:none !important;
 }
 .hint-icon:hover{ filter:brightness(1.05); }
+
+/* Show a placeholder whenever the definition is temporarily empty */
+#actionBar #definition:empty::before{
+  content: "Loading game…";
+  color: var(--text-secondary);
+  font-style: italic;
+  opacity: .9;
+}
