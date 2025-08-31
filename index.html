@@ -1,13 +1,20 @@
+<!-- index.html-->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Word Circle Game</title>
-    <link rel="stylesheet" href="henkel-styles.css">
+    <link id="challengeStylesheet" rel="stylesheet" href="">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
+
 <body>
+    <div id="countdownOverlay" style="display:none;">
+        <div id="countdownNumber">3</div>
+    </div>
+    <div id="adminPanel" style="display:none; margin:16px 0;"></div>
     <!-- Loading Screen -->
     <div id="loadingScreen" class="loading-screen" style="display: flex;">
         <div class="loading-content">
@@ -26,29 +33,34 @@
                 <h1 class="welcome-title" id="gameTitle"></h1>
                 <p class="welcome-subtitle" id="gameSubtitle"></p>
             </div>
-            
+
             <div class="welcome-content">
                 <div class="game-rules">
                     <h3>🎯 How to Play</h3>
                     <div class="rules-grid">
                         <div class="rule-item">
                             <h4>🏆 The Challenge</h4>
-                            <p>Answer business-related questions for each letter A-Z. Each letter has a specific definition to complete.</p>
+                            <p>Answer business-related questions for each letter A-Z. Each letter has a specific
+                                definition to complete.</p>
                         </div>
                         <div class="rule-item">
                             <h4>⏰ Time Pressure</h4>
-                            <p>You have <span id="welcomeTimeLimit"></span> to complete all 26 questions. Quick thinking and business knowledge are key!</p>
+                            <p>You have <span id="welcomeTimeLimit"></span> to complete all 26 questions. Quick thinking
+                                and business knowledge are key!</p>
                         </div>
                         <div class="rule-item">
                             <h4>🎮 Controls</h4>
-                            <p><strong>Answer:</strong> Type and press Enter<br><strong>Pass:</strong> Skip to next question<br><strong>Hint:</strong> Get first letter + length (<span id="welcomeMaxHints"></span> max)</p>
+                            <p><strong>Answer:</strong> Type and press Enter<br><strong>Pass:</strong> Skip to next
+                                question<br><strong>Hint:</strong> Get first letter + length (<span
+                                    id="welcomeMaxHints"></span> max)</p>
                         </div>
                         <div class="rule-item">
                             <h4>🧠 Smart Matching</h4>
-                            <p>Don't worry about exact spelling! The system accepts similar answers and provides helpful hints when you're close.</p>
+                            <p>Don't worry about exact spelling! The system accepts similar answers and provides helpful
+                                hints when you're close.</p>
                         </div>
                     </div>
-                    
+
                     <div class="scoring-table">
                         <h4>📊 Scoring System</h4>
                         <div class="scoring-row">
@@ -69,7 +81,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="action-buttons">
                     <button class="warning" onclick="startPreview()">👁️ PREVIEW QUESTIONS</button>
                     <button onclick="startGame()">🚀 START CHALLENGE</button>
@@ -82,7 +94,25 @@
     <div id="gameContainer" class="game-container">
         <div class="game-header">
             <h1 id="gameHeaderTitle"></h1>
-            <h2 id="gameHeaderSubtitle"></h2>
+            <div class="challenge-badge" id="challengeBadge"></div>
+        </div>
+        <!-- stays as-is on desktop, hidden on mobile -->
+        <div id="conditionsBar" class="conditions-bar" aria-label="Game conditions"></div>
+
+        <!-- compact toggle shown on phones, preview mode only -->
+        <button id="condToggle" class="cond-toggle" type="button" aria-haspopup="dialog" aria-controls="condOverlay">
+            📋 Rules & scoring
+        </button>
+
+        <!-- mobile bottom-sheet -->
+        <div id="condOverlay" role="dialog" aria-modal="true" aria-labelledby="condTitle">
+            <div class="cond-sheet">
+                <div class="cond-header">
+                    <strong id="condTitle">Rules & scoring</strong>
+                    <button id="condClose" class="cond-close" type="button" aria-label="Close">✕</button>
+                </div>
+                <div id="condBody" class="cond-body"></div>
+            </div>
         </div>
 
         <!-- Game Stats -->
@@ -133,17 +163,18 @@
         </div>
 
         <div class="btn-container">
-            <button onclick="game.checkAnswer()">✓ SUBMIT</button>
-            <button class="warning" onclick="game.pasapalabra()">⏭️ PASS</button>
-            <button class="warning" onclick="game.showHint()">💡 HINT</button>
-            <button onclick="game.newGame()">🔄 NEW GAME</button>
-        </div>
+            <button onclick="game.checkAnswer()"><span class="btn-ico">✓</span>SUBMIT</button>
+            <button class="warning" onclick="game.pasapalabra()"><span class="btn-ico">»»</span>PASS</button>
+            <button class="warning" onclick="game.showHint()"><span class="btn-ico">ⓘ</span>HINT</button>
+            <button onclick="game.newGame()"><span class="btn-ico">↻</span>NEW GAME</button>
+          </div>
 
         <!-- Final Score -->
         <div id="finalScore"></div>
-        
+
         <div style="text-align: center; margin-top: 20px;">
-            <button id="viewResults" onclick="game.showResults()" style="display: none;">📊 VIEW DETAILED RESULTS</button>
+            <button id="viewResults" onclick="game.showResults()" style="display: none;">📊 VIEW DETAILED
+                RESULTS</button>
         </div>
 
         <!-- Results Panel -->
@@ -153,31 +184,49 @@
     <script src="gameUtils.js"></script>
     <script src="wordCircleGame.js"></script>
     <script>
-        // Global functions
+        function runCountdown(cb) {
+            const o = document.getElementById('countdownOverlay');
+            const n = document.getElementById('countdownNumber');
+            let v = 3;
+            n.textContent = v;
+            o.classList.add('show');
+            const t = setInterval(() => {
+                v--;
+                if (v <= 0) {
+                    clearInterval(t);
+                    o.classList.remove('show');
+                    cb();
+                } else {
+                    n.textContent = v;
+                }
+            }, 1000);
+        }
+
         function startGame() {
             document.getElementById('welcomeScreen').style.display = 'none';
             document.getElementById('gameContainer').style.display = 'block';
-            game.newGame();
+            runCountdown(() => game.newGame());
         }
 
         function startPreview() {
-            game.startPreview();
+            document.body.classList.add('preview-mode');
+            runCountdown(() => game.startPreview());
         }
 
-        // Initialize game when page loads
         window.addEventListener('load', async () => {
             try {
                 await game.init();
-                // Auto-focus on welcome screen
                 setTimeout(() => {
                     const startButton = document.querySelector('button[onclick="startGame()"]');
                     if (startButton) startButton.focus();
                 }, 100);
             } catch (error) {
                 console.error('Failed to initialize game:', error);
-                document.getElementById('loadingScreen').innerHTML = '<div class="loading-content"><h3 style="color: red;">Error loading game. Please check console.</h3></div>';
+                document.getElementById('loadingScreen').innerHTML =
+                    '<div class="loading-content"><h3 style="color: red;">Error loading game. Please check console.</h3></div>';
             }
         });
     </script>
 </body>
+
 </html>

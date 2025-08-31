@@ -1,0 +1,253 @@
+{
+    "A": [
+        {
+            "word": "Amazon",
+            "definition": "The biggest ecommerce retailer in Europe?",
+            "answers": [
+                "Amazon"
+            ]
+        }
+    ],
+    "B": [
+        {
+            "word": "Bigger",
+            "definition": "In our strategy, we aim to make net sales and gp1 \u2026?",
+            "answers": [
+                "Bigger",
+                "Better",
+                "Boost"
+            ]
+        }
+    ],
+    "C": [
+        {
+            "word": "Compliance",
+            "definition": "A key principle ensuring business practices are legal?",
+            "answers": [
+                "Compliance"
+            ]
+        }
+    ],
+    "D": [
+        {
+            "word": "Discount",
+            "definition": "A negotiation tactic commontly used in the annual negotiations with customers?",
+            "answers": [
+                "Drift",
+                "Discount",
+                "Discounting"
+            ]
+        }
+    ],
+    "E": [
+        {
+            "word": "Ecommerce",
+            "definition": "Selling products online is known as?",
+            "answers": [
+                "Ecommerce", "e-commerce", "E-comm"
+            ]
+        }
+    ],
+    "F": [
+        {
+            "word": "Folding",
+            "definition": "A trade term adjustment often used in negotiations?",
+            "answers": [
+                "Folding"
+            ]
+        }
+    ],
+    "G": [
+        {
+            "word": "Green",
+            "definition": "What word is commonly used to describe environmentally friendly energy sources and practices?",
+            "answers": [
+                "Green"
+            ]
+        }
+    ],
+    "H": [
+        {
+            "word": "Hypercare",
+            "definition": "A special intense focus on a category or customer?",
+            "answers": [
+                "Hypercare",
+                "Handling",
+                "Help"
+            ]
+        }
+    ],
+    "I": [
+        {
+            "word": "Index",
+            "definition": "A metric comparing prices to competitors?",
+            "answers": ["Index", "Indicator"
+
+            ]
+        }
+    ],
+    "J": [
+        {
+            "word": "Jump",
+            "definition": "What word describes the continued increase in GP1 over the last years?",
+            "answers": [
+                "Jump",
+                "Jumping",
+                "Jumpstart"
+            ]
+        }
+    ],
+    "K": [
+        {
+            "word": "KPI",
+            "definition": "A key metric in measuring business indicators?",
+            "answers": [
+                "KPI"
+            ]
+        }
+    ],
+    "L": [
+        {
+            "word": "Leverage",
+            "definition": "What word means to use your strengths or resources to get an advantage?",
+            "answers": [
+                "Leverage"
+            ]
+        }
+    ],
+    "M": [
+        {
+            "word": "Margin",
+            "definition": "The expected profit from a sale?",
+            "answers": [
+                "Margin",
+                "Mark",
+                "Mark-up"
+            ]
+        }
+    ],
+    "N": [
+        {
+            "word": "Negotiation",
+            "definition": "A critical skill in closing deals?",
+            "answers": [
+                "Negotiation"
+            ]
+        }
+    ],
+    "O": [
+        {
+            "word": "Order",
+            "definition": "What word means the requests customers make to buy products, helping build our sales?",
+            "answers": [
+                "Order"
+            ]
+        }
+    ],
+    "P": [
+        {
+            "word": "Pricing",
+            "definition": "A key lever in net revenue management?",
+            "answers": [
+                "Pricing"
+            ]
+        }
+    ],
+    "Q": [
+        {
+            "word": "Quality",
+            "definition": "A measure of product excellence?",
+            "answers": [
+                "Quality"
+            ]
+        }
+    ],
+    "R": [
+        {
+            "word": "Risk",
+            "definition": "What do suppliers take when retailers start comparing net prices?",
+            "answers": [
+                "Risk"
+            ]
+        }
+    ],
+    "S": [
+        {
+            "word": "Sustainability",
+            "definition": "A business approach focused on environmental impact?",
+            "answers": [
+                "Sustainability"
+            ]
+        }
+    ],
+    "T": [
+        {
+            "word": "Team",
+            "definition": "What word means a group of people working together to achieve a goal?",
+            "answers": [
+                "Team",
+                "Tribe",
+                "Taskforce"
+            ]
+        }
+    ],
+    "U": [
+        {
+            "word": "Upsell",
+            "definition": "Raising the perceived value of a product?",
+            "answers": [
+                "Upsell",
+                "Upgrade",
+                "Upscale"
+            ]
+        }
+    ],
+    "V": [
+        {
+            "word": "Valorization",
+            "definition": "What word do we use for the process of making our brands worth a higher price?",
+            "answers": [
+                "Valorization",
+                "Value",
+                "Valuation"
+            ]
+        }
+    ],
+    "W": [
+        {
+            "word": "Website",
+            "definition": "A digital platform for selling directly the products to the consumers?",
+            "answers": [
+                "Website"
+            ]
+        }
+    ],
+    "X": [
+        {
+            "word": "Excellancel",
+            "definition": "(Contains X) What standard of quality do we strive for?",
+            "answers": [
+                "Excellence",
+                "Extra"
+            ]
+        }
+    ],
+    "Y": [
+        {
+            "word": "Yearly",
+            "definition": "What word means sales happening every year?",
+            "answers": [
+                "Yearly"
+            ]
+        }
+    ],
+    "Z": [
+        {
+            "word": "Zero",
+            "definition": "Our ambition in terms of CO2 emissions?",
+            "answers": [
+                "Zero"
+            ]
+        }
+    ]
+}

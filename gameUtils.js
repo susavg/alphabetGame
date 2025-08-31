@@ -154,14 +154,32 @@ function shuffleArray(array) {
  * Apply theme colors to CSS variables
  * @param {Object} theme 
  */
-function applyTheme(theme) {
+ function applyTheme(theme) {
     const root = document.documentElement;
-    
-    Object.entries(theme.colors).forEach(([key, value]) => {
-        const cssVar = '--' + key.replace(/([A-Z])/g, '-$1').toLowerCase();
-        root.style.setProperty(cssVar, value);
+    const colors = theme?.colors || {};
+  
+    // generic kebab-case (keeps --card-background, --text-color working)
+    Object.entries(colors).forEach(([key, value]) => {
+      const kebab = '--' + key.replace(/([A-Z])/g, '-$1').toLowerCase();
+      root.style.setProperty(kebab, value);
     });
-}
+  
+    // explicit aliases for "*-color" tokens used throughout CSS
+    const alias = {
+      primary:        '--primary-color',
+      accent:         '--accent-color',
+      correct:        '--correct-color',
+      incorrect:      '--incorrect-color',
+      background:     '--background-color',
+      cardBackground: '--card-background',
+      textColor:      '--text-color',
+      textSecondary:  '--text-secondary'
+    };
+  
+    Object.entries(alias).forEach(([key, cssVar]) => {
+      if (colors[key]) root.style.setProperty(cssVar, colors[key]);
+    });
+  }
 
 /**
  * Create confetti effect

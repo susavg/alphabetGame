@@ -1,0 +1,58 @@
+{
+  "routing": { "param": "challenge", "defaultSlug": "sales-directors" },
+
+  "default": {
+    "basePath": "challenges/default",
+    "title": "Corporate Word Circle",
+    "subtitle": "Company Challenge",
+    "logoPath": "logo.svg",
+    "centerLogoPath": "logoRed.png",
+    "stylesPath": "styles.css",
+    "gameSettings": {
+      "timeLimit": 500,
+      "maxHints": 3,
+      "fuzzyMatching": { "enabled": true, "threshold": 0.8, "maxDistance": 2 },
+      "penalizeUnanswered": false,
+      "scoring": {
+        "correct": 3,
+        "incorrect": -2,
+        "pasapalabra": -1,
+        "timeBonus": {
+          "threshold": 10,
+          "levels": [
+            { "maxTime": 60, "bonus": 30 },
+            { "maxTime": 120, "bonus": 20 },
+            { "maxTime": 180, "bonus": 10 }
+          ]
+        }
+      }
+    },
+    "theme": {
+      "name": "corporate",
+      "colors": {
+        "primary": "#2c3e50",
+        "accent": "#3498db",
+        "correct": "#2ecc71",
+        "incorrect": "#e74c3c",
+        "background": "#ecf0f1",
+        "cardBackground": "#ffffff",
+        "textColor": "#333333"
+      }
+    }
+  },
+
+  "challenges": {
+    "eu-nrm": {
+      "basePath": "challenges/eu-nrm",
+      "title": "EU NRM Team - Challenge 2025",
+      "subtitle": "The Alphabet Game",
+      "questionsPath": "questions.json"
+    },
+    "sales-directors": {
+      "basePath": "challenges/sales-directors",
+      "title": "Sales Directors Bootcamp",
+      "subtitle": "Leadership & Sales Mastery",
+      "questionsPath": "questions.json"
+    }
+  }
+}
