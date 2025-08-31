@@ -627,6 +627,7 @@ showHintToast(text){
     document.getElementById('welcomeScreen').style.display='flex';
     document.getElementById('actionBar')?.classList.add('hidden');
     document.body.classList.remove('preview-mode');
+    window.scrollTo({ top: 0, behavior: 'auto' });
     this.isPreviewMode=false;
     clearInterval(this.timerInterval);
   }

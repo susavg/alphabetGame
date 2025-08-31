@@ -178,16 +178,16 @@
       </div>
     </header>
 
+    
     <!-- Rosco -->
-    <div class="rosco-container">
-      <div class="rosco" id="rosco"></div>
-      <div class="current-letter" id="currentLetterDisplay"></div>
-      <div class="center-image">
-        <div id="centerLogo"></div>
+    <div class="playfield">
+      <div class="rosco-container">
+        <div class="rosco" id="rosco"></div>
+        <div class="current-letter" id="currentLetterDisplay"></div>
+        <div class="center-image"><div id="centerLogo"></div></div>
       </div>
     </div>
 
-    <!-- Sticky action bar with question + input + buttons -->
     <!-- Sticky action bar with question + input + buttons (all together) -->
     <div id="actionBar" class="actionbar">
       <div id="hintToast" class="hint-toast" aria-live="polite"></div>
@@ -300,18 +300,18 @@
     })();
 
     window.addEventListener('load', async () => {
-      try {
-        await game.init();
-        setTimeout(() => {
-          const startBtn = document.querySelector('button[onclick="startGame()"]');
-          if (startBtn) startBtn.focus();
-        }, 100);
-      } catch (err) {
-        console.error('Failed to initialize game:', err);
-        document.getElementById('loadingScreen').innerHTML =
-          '<div class="loading-content"><h3 style="color: red;">Error loading game. Please check console.</h3></div>';
-      }
-    });
+    try {
+      await game.init();
+
+      // Always start at the very top (don’t autofocus anything that might scroll into view)
+      window.scrollTo(0, 0);
+      document.body.scrollTop = 0; // iOS/Safari fallback
+    } catch (err) {
+      console.error('Failed to initialize game:', err);
+      document.getElementById('loadingScreen').innerHTML =
+        '<div class="loading-content"><h3 style="color: red;">Error loading game. Please check console.</h3></div>';
+    }
+  });
   </script>
   <script>
     function setHeaderHeightVar(){

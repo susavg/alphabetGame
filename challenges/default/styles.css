@@ -60,6 +60,51 @@ body, .game-container, .rosco-container {
   touch-action: pan-y;
 }
 
+/* Play area between fixed header and bottom bar */
+.playfield{
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;      /* vertical centering */
+  justify-content: center;  /* horizontal centering */
+  padding: 8px 0;
+  /* desktop/tablet: action bar isn't fixed, so don't subtract it */
+  min-height: calc(100svh - var(--app-header-height) - 24px);
+}
+
+.playfield{
+  /* Tweak this if you want more/less bias */
+  --rosco-nudge: clamp(12px, 5svh, 64px);
+}
+
+/* Apply the nudge */
+.playfield .rosco-container{
+  transform: translateY(var(--rosco-nudge));
+}
+
+/* On larger screens, a gentler nudge feels better */
+@media (min-width: 769px){
+  .playfield{ --rosco-nudge: clamp(8px, 3svh, 40px); }
+}
+
+/* mobile: action bar is fixed — subtract its real height */
+@media (max-width: 768px){
+  .playfield{
+    min-height: calc(100svh - var(--app-header-height) - var(--actionbar-height, 160px));
+  }
+}
+
+/* the rosco itself no longer needs auto margins */
+.rosco-container{
+  position: relative;
+  width: min(440px, 100vw - 24px);
+  aspect-ratio: 1 / 1;
+  height: auto;
+  margin: 0;               /* was: auto */
+  align-self: center;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
 /* ---------------------------------------
    Generic buttons
 --------------------------------------- */
@@ -161,6 +206,8 @@ button:disabled{ opacity:.55; cursor:not-allowed; box-shadow:none; }
 .game-container{
   width:100%; max-width: 1000px; margin: 18px auto; padding: 16px;
   background: var(--card-background); border-radius: 22px; box-shadow: var(--shadow-2);
+  display: flex;         
+  flex-direction: column;
 }
 
 /* Compact header */
@@ -247,9 +294,10 @@ html { scroll-padding-top: var(--app-header-height); }
   width: min(440px, 100vw - 24px);
   aspect-ratio: 1 / 1;
   height: auto;
-  margin: 14px auto;
+  margin: auto;           
+  align-self: center;
   overflow: hidden;
-  touch-action: pan-y;      /* no horizontal drag */
+  touch-action: pan-y;
 }
 
 
@@ -430,6 +478,7 @@ input#answer:focus{
    Final score + results
 --------------------------------------- */
 #finalScore{
+  display: none;
   margin: 18px 0; padding: 18px; border-radius: 14px;
   background: linear-gradient(135deg, #fafafa, #f1f1f1);
   border-left: 4px solid var(--primary); box-shadow: var(--shadow-1);
