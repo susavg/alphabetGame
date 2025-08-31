@@ -371,6 +371,61 @@ input#answer:focus{
 .btn-row{ display:flex; gap:12px; margin: 12px 0 4px; }
 .btn-row button{ flex:1; min-width:0; }
 
+
+/* One-row composer */
+.answer-row { margin-top: 8px; }
+
+.answer-form{
+  display: flex; align-items: center; gap: 10px;
+}
+
+/* Input expands, buttons hug the right */
+.answer-form #answer{
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 12px 14px;
+  font-size: 16px; /* prevent iOS zoom */
+  border: 2px solid #e2e2e2;
+  border-radius: 999px;
+  font-weight: 700; text-align: left;
+}
+
+/* Control buttons (normal state with labels) */
+.btn-ctl{
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px; padding: 10px 14px;
+  min-width: 112px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.btn-ctl .lbl{ display: inline-block; }
+
+/* Compact state: icon-only, square, saves vertical space when KB is shown */
+.actionbar.compact .btn-ctl{
+  min-width: 44px; width: 44px; height: 44px; padding: 0;
+  border-radius: 12px;
+}
+.actionbar.compact .btn-ctl .lbl{ display: none; }
+
+/* Keep icons visible in both modes */
+.btn-ctl svg{ width: 18px; height: 18px; }
+
+/* Bottom bar stays fixed; add safe-area padding */
+@media (max-width: 768px){
+  .actionbar{
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 1000;
+    background: var(--card-background);
+    border-top: 1px solid #e7e7e7;
+    box-shadow: 0 -8px 24px rgba(0,0,0,.12);
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+  }
+
+  /* Reserve just enough room for the action bar so it never overlaps content */
+  #gameContainer{
+    padding-bottom: calc(var(--actionbar-height, 160px) + 12px);
+  }
+}
+
 /* ---------------------------------------
    Final score + results
 --------------------------------------- */

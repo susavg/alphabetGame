@@ -276,7 +276,7 @@ showHintToast(text){
     document.getElementById('gameContainer').style.display='block';
 
     const inp=document.getElementById('answer');
-    if(inp){ inp.disabled=false; inp.placeholder='Preview Mode - Type your answer...'; }
+    if(inp){ inp.disabled=false; inp.placeholder='Type your answer...'; }
     const cur=this.remainingWords[this.currentIndex];
     if(cur) document.getElementById('definition').textContent=`[PREVIEW] ${cur.definition}`;
   }

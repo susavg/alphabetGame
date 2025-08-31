@@ -207,36 +207,36 @@
         </div>
       </div>
 
-      <div class="input-container">
-        <input
-          type="text"
-          id="answer"
-          placeholder="Type your answer here..."
-          autocomplete="off"
-          autocapitalize="none"
-          autocorrect="off"
-          spellcheck="false"
-          enterkeyhint="done"
-          inputmode="text"
-        />
-      </div>
+      <!-- One-row chat-style composer -->
+      <div class="answer-row">
+        <form id="answerForm" class="answer-form" onsubmit="return false;">
+          <input
+            type="text"
+            id="answer"
+            placeholder="Type your answer here..."
+            autocomplete="off"
+            autocapitalize="none"
+            autocorrect="off"
+            spellcheck="false"
+            enterkeyhint="done"
+            inputmode="text"
+          />
 
-      <div class="btn-row">
-        <button id="btnSubmit" class="with-ico" type="button" aria-label="Submit answer">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path fill="currentColor" d="M9 16.2l-3.5-3.5-1.4 1.4L9 19 20.3 7.7l-1.4-1.4z" />
-          </svg>
-          SUBMIT
-        </button>
-      
-        <button id="btnPass" class="btn-pass with-ico" type="button" aria-label="Pass">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path fill="currentColor" d="M8 5v14l11-7zM5 5h2v14H5z" />
-          </svg>
-          PASS
-        </button>
+          <button id="btnSubmit" class="btn-ctl with-ico" type="submit" aria-label="Submit">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M9 16.2l-3.5-3.5-1.4 1.4L9 19 20.3 7.7l-1.4-1.4z" />
+            </svg>
+            <span class="lbl">SUBMIT</span>
+          </button>
+
+          <button id="btnPass" class="btn-ctl btn-pass with-ico" type="button" aria-label="Pass">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M8 5v14l11-7zM5 5h2v14H5z" />
+            </svg>
+            <span class="lbl">PASS</span>
+          </button>
+        </form>
       </div>
-    </div>
 
     <div id="finalScore"></div>
 
