@@ -1,253 +1,340 @@
 {
     "A": [
-        {
-            "word": "Amazon",
-            "definition": "The biggest ecommerce retailer in Europe?",
-            "answers": [
-                "Amazon"
-            ]
-        }
+      {
+        "word": "Amazon",
+        "definition": "The biggest ecommerce retailer in Europe?",
+        "answers": ["Amazon"],
+        "hints": [
+          "Known for fast delivery and a smile from A→Z in its logo.",
+          "Seattle-based company that also runs a huge cloud business.",
+          "Owns Prime Video; marketplace dominates many EU countries.",
+          "Starts with A and ends with N (6 letters)."
+        ]
+      }
     ],
     "B": [
-        {
-            "word": "Bigger",
-            "definition": "In our strategy, we aim to make net sales and gp1 \u2026?",
-            "answers": [
-                "Bigger",
-                "Better",
-                "Boost"
-            ]
-        }
+      {
+        "word": "Bigger",
+        "definition": "In our strategy, we aim to make net sales and gp1 …?",
+        "answers": ["Bigger", "Better", "Boost"],
+        "hints": [
+          "The direction is up — growth focused.",
+          "Comparative form of the word 'big'.",
+          "Starts with B, 6 letters.",
+          "Synonyms in our slides: better, boost."
+        ]
+      }
     ],
     "C": [
-        {
-            "word": "Compliance",
-            "definition": "A key principle ensuring business practices are legal?",
-            "answers": [
-                "Compliance", "Compliant"
-            ]
-        }
+      {
+        "word": "Compliance",
+        "definition": "A key principle ensuring business practices are legal?",
+        "answers": ["Compliance", "Compliant"],
+        "hints": [
+          "About following laws, codes of conduct, and policies.",
+          "Prevents breaches, fines, and reputational harm.",
+          "Often paired with 'ethics' and 'governance'.",
+          "Starts with C, ends with E (10 letters)."
+        ]
+      }
     ],
     "D": [
-        {
-            "word": "Discount",
-            "definition": "A negotiation tactic commontly used in the annual negotiations with customers?",
-            "answers": [
-                "Drift",
-                "Discount",
-                "Discounting"
-            ]
-        }
+      {
+        "word": "Discount",
+        "definition": "A negotiation tactic commontly used in the annual negotiations with customers?",
+        "answers": ["Drift", "Discount", "Discounting"],
+        "hints": [
+          "A reduction from list price to close a deal.",
+          "Often expressed as a percentage (e.g., −10%).",
+          "Common in annual talks and promo mechanics.",
+          "Starts with D, 8 letters; verb form ends with '-ing'."
+        ]
+      }
     ],
     "E": [
-        {
-            "word": "Ecommerce",
-            "definition": "Selling products online is known as?",
-            "answers": [
-                "Ecommerce", "e-commerce", "E-comm"
-            ]
-        }
+      {
+        "word": "Ecommerce",
+        "definition": "Selling products online is known as?",
+        "answers": ["Ecommerce", "e-commerce", "E-comm"],
+        "hints": [
+          "Digital channel where carts live on a screen.",
+          "Pure players and marketplaces live here.",
+          "Opposite of brick-and-mortar retail.",
+          "Starts with E; can be written with a hyphen."
+        ]
+      }
     ],
     "F": [
-        {
-            "word": "Folding",
-            "definition": "A trade term adjustment often used in negotiations?",
-            "answers": [
-                "Folding"
-            ]
-        }
+      {
+        "word": "Folding",
+        "definition": "A trade term adjustment often used in negotiations?",
+        "answers": ["Folding"],
+        "hints": [
+          "Term from trade mechanics; no laundry involved.",
+          "Means adjusting/absorbing conditions into fewer lines.",
+          "Used to reach a balanced agreement.",
+          "Ends in '-ing' and starts with F."
+        ]
+      }
     ],
     "G": [
-        {
-            "word": "Green",
-            "definition": "What word is commonly used to describe environmentally friendly energy sources and practices?",
-            "answers": [
-                "Green"
-            ]
-        }
+      {
+        "word": "Green",
+        "definition": "What word is commonly used to describe environmentally friendly energy sources and practices?",
+        "answers": ["Green"],
+        "hints": [
+          "The color of eco initiatives.",
+          "Used with 'energy', 'packaging', and 'chemistry'.",
+          "Symbol on many sustainability labels.",
+          "Five letters"
+        ]
+      }
     ],
     "H": [
-        {
-            "word": "Hypercare",
-            "definition": "A special intense focus on a category or customer?",
-            "answers": [
-                "Hypercare",
-                "Handling",
-                "Help"
-            ]
-        }
+      {
+        "word": "Hypercare",
+        "definition": "A special intense focus on a category or customer?",
+        "answers": ["Hypercare", "Handling", "Help"],
+        "hints": [
+          "Extra-intensive support period after a change or launch.",
+          "Short, time-boxed phase to stabilize operations.",
+          "Often follows go-live in IT or key account projects.",
+          "Starts with H and ends with 'care'."
+        ]
+      }
     ],
     "I": [
-        {
-            "word": "Index",
-            "definition": "A metric comparing prices to competitors?",
-            "answers": ["Index", "Indicator"
-
-            ]
-        }
+      {
+        "word": "Index",
+        "definition": "A metric comparing prices to competitors?",
+        "answers": ["Index", "Indicator"],
+        "hints": [
+          "Relative measure rather than an absolute number.",
+          "Helps track where our prices sit vs. market.",
+          "Often equals 100 at parity.",
+          "Five letters, starts with I, contains 'dex'."
+        ]
+      }
     ],
     "J": [
-        {
-            "word": "Jump",
-            "definition": "What word describes the continued increase in GP1 over the last years?",
-            "answers": [
-                "Jump",
-                "Jumping",
-                "Jumpstart"
-            ]
-        }
+      {
+        "word": "Jump",
+        "definition": "What word describes the continued increase in GP1 over the last years?",
+        "answers": ["Jump", "Jumping", "Jumpstart"],
+        "hints": [
+          "A quick upward movement.",
+          "The rope kind is a workout.",
+          "Also used with 'start' for acceleration.",
+          "Four letters, starts with J."
+        ]
+      }
     ],
     "K": [
-        {
-            "word": "KPI",
-            "definition": "A key metric in measuring business indicators?",
-            "answers": [
-                "KPI"
-            ]
-        }
+      {
+        "word": "KPI",
+        "definition": "A key metric in measuring business indicators?",
+        "answers": ["KPI"],
+        "hints": [
+          "Three-letter acronym used on dashboards.",
+          "The 'P' stands for Performance.",
+          "Targets are set on these.",
+          "Starts with K, 3 letters."
+        ]
+      }
     ],
     "L": [
-        {
-            "word": "Leverage",
-            "definition": "What word means to use your strengths or resources to get an advantage?",
-            "answers": [
-                "Leverage"
-            ]
-        }
+      {
+        "word": "Leverage",
+        "definition": "What word means to use your strengths or resources to get an advantage?",
+        "answers": ["Leverage"],
+        "hints": [
+          "Make existing assets work harder.",
+          "Often used with 'scale' or 'capabilities'.",
+          "Common finance and strategy term.",
+          "Eight letters, starts with L."
+        ]
+      }
     ],
     "M": [
-        {
-            "word": "Margin",
-            "definition": "The expected profit from a sale?",
-            "answers": [
-                "Margin",
-                "Mark",
-                "Mark-up"
-            ]
-        }
+      {
+        "word": "Margin",
+        "definition": "The expected profit from a sale?",
+        "answers": ["Margin", "Mark", "Mark-up"],
+        "hints": [
+          "Difference between selling price and cost.",
+          "Can be gross or net.",
+          "Also the blank area at the edge of a page.",
+          "Six letters, starts with M."
+        ]
+      }
     ],
     "N": [
-        {
-            "word": "Negotiation",
-            "definition": "A critical skill in closing deals?",
-            "answers": [
-                "Negotiation"
-            ]
-        }
+      {
+        "word": "Negotiation",
+        "definition": "A critical skill in closing deals?",
+        "answers": ["Negotiation"],
+        "hints": [
+          "Where two sides seek agreement.",
+          "BATNA and anchoring are concepts here.",
+          "Annual customer meetings rely on this skill.",
+          "Starts with N, ends with N (11 letters)."
+        ]
+      }
     ],
     "O": [
-        {
-            "word": "Order",
-            "definition": "What word means the requests customers make to buy products, helping build our sales?",
-            "answers": [
-                "Order"
-            ]
-        }
+      {
+        "word": "Order",
+        "definition": "What word means the requests customers make to buy products, helping build our sales?",
+        "answers": ["Order"],
+        "hints": [
+          "The object of a purchase request.",
+          "Comes before invoice and delivery.",
+          "Placed online or via sales systems.",
+          "Five letters, starts with O."
+        ]
+      }
     ],
     "P": [
-        {
-            "word": "Pricing",
-            "definition": "A key lever in net revenue management?",
-            "answers": [
-                "Pricing", "Price"
-            ]
-        }
+      {
+        "word": "Pricing",
+        "definition": "A key lever in net revenue management?",
+        "answers": ["Pricing", "Price"],
+        "hints": [
+          "One of the most powerful NRM levers.",
+          "Involves list, net, and promo mechanics.",
+          "Elasticity matters here.",
+          "Ends with '-ing', starts with P."
+        ]
+      }
     ],
     "Q": [
-        {
-            "word": "Quality",
-            "definition": "A measure of product excellence?",
-            "answers": [
-                "Quality"
-            ]
-        }
+      {
+        "word": "Quality",
+        "definition": "A measure of product excellence?",
+        "answers": ["Quality"],
+        "hints": [
+          "QA and QC test this.",
+          "What customers perceive in performance and reliability.",
+          "Often tracked with defects and complaints.",
+          "Starts with Q, ends with Y (7 letters)."
+        ]
+      }
     ],
     "R": [
-        {
-            "word": "Risk",
-            "definition": "What do suppliers take when retailers start comparing net prices?",
-            "answers": [
-                "Risk"
-            ]
-        }
+      {
+        "word": "Risk",
+        "definition": "What do suppliers take when retailers start comparing net prices?",
+        "answers": ["Risk"],
+        "hints": [
+          "Exposure to a negative outcome.",
+          "Sometimes taken for potential reward.",
+          "Managed, mitigated, or transferred.",
+          "Four letters, starts with R."
+        ]
+      }
     ],
     "S": [
-        {
-            "word": "Sustainability",
-            "definition": "A business approach focused on environmental impact?",
-            "answers": [
-                "Sustainability", "Sustainable"
-            ]
-        }
+      {
+        "word": "Sustainability",
+        "definition": "A business approach focused on environmental impact?",
+        "answers": ["Sustainability", "Sustainable"],
+        "hints": [
+          "Long-term approach balancing people, planet, and profit.",
+          "Part of ESG; often linked to CO₂, waste, and water.",
+          "Packaging, energy and sourcing policies live here.",
+          "Starts with S and ends with '-ability' (14 letters)."
+        ]
+      }
     ],
     "T": [
-        {
-            "word": "Team",
-            "definition": "What word means a group of people working together to achieve a goal?",
-            "answers": [
-                "Team",
-                "Tribe",
-                "Taskforce"
-            ]
-        }
+      {
+        "word": "Team",
+        "definition": "What word means a group of people working together to achieve a goal?",
+        "answers": ["Team", "Tribe", "Taskforce"],
+        "hints": [
+          "Collaboration beats solo work.",
+          "Shares goals and roles.",
+          "Common word in sports and business.",
+          "Four letters, starts with T."
+        ]
+      }
     ],
     "U": [
-        {
-            "word": "Upsell",
-            "definition": "Raising the perceived value of a product?",
-            "answers": [
-                "Upsell",
-                "Upgrade",
-                "Upscale"
-            ]
-        }
+      {
+        "word": "Upsell",
+        "definition": "Raising the perceived value of a product?",
+        "answers": ["Upsell", "Upgrade", "Upscale"],
+        "hints": [
+          "Encourage a customer to choose a higher tier.",
+          "Often happens at checkout or via bundles.",
+          "Related to cross-sell.",
+          "Starts with U, 6 letters, ends with '-sell'."
+        ]
+      }
     ],
     "V": [
-        {
-            "word": "Valorization",
-            "definition": "What word do we use for the process of making our brands worth a higher price?",
-            "answers": [
-                "Valorization",
-                "Value",
-                "Valuation"
-            ]
-        }
+      {
+        "word": "Valorization",
+        "definition": "What word do we use for the process of making our brands worth a higher price?",
+        "answers": ["Valorization", "Value", "Valuation"],
+        "hints": [
+          "Increasing perceived worth.",
+          "Often paired with premiumization.",
+          "Latin root for 'value'; ends with '-ization'.",
+          "Starts with V, 12 letters."
+        ]
+      }
     ],
     "W": [
-        {
-            "word": "Website",
-            "definition": "A digital platform for selling directly the products to the consumers?",
-            "answers": [
-                "Website", "Web"
-            ]
-        }
+      {
+        "word": "Website",
+        "definition": "A digital platform for selling directly the products to the consumers?",
+        "answers": ["Website", "Web"],
+        "hints": [
+          "Your brand’s dot-com home.",
+          "Reached with 'www.' or via search.",
+          "D2C can live here.",
+          "Seven letters, starts with W."
+        ]
+      }
     ],
     "X": [
-        {
-            "word": "Excellancel",
-            "definition": "(Contains X) What standard of quality do we strive for?",
-            "answers": [
-                "Excellence",
-                "Extra"
-            ]
-        }
+      {
+        "word": "Excellence",
+        "definition": "(Contains X) What standard of quality do we strive for?",
+        "answers": ["Excellence", "Extra"],
+        "hints": [
+          "Beyond 'good' — the gold standard.",
+          "Often paired with 'operational'.",
+          "Contains the letter X and ends with '-ence'.",
+          "Starts with E (10 letters)."
+        ]
+      }
     ],
     "Y": [
-        {
-            "word": "Yearly",
-            "definition": "What word means sales happening every year?",
-            "answers": [
-                "Yearly"
-            ]
-        }
+      {
+        "word": "Yearly",
+        "definition": "What word means sales happening every year?",
+        "answers": ["Yearly"],
+        "hints": [
+          "Another way to say 'annually'.",
+          "Recurs once per calendar cycle.",
+          "Ends with '-ly'.",
+          "Six letters, starts with Y."
+        ]
+      }
     ],
     "Z": [
-        {
-            "word": "Zero",
-            "definition": "Our ambition in terms of CO2 emissions?",
-            "answers": [
-                "Zero"
-            ]
-        }
+      {
+        "word": "Zero",
+        "definition": "Our ambition in terms of CO2 emissions?",
+        "answers": ["Zero"],
+        "hints": [
+          "Net-_____ target for emissions.",
+          "The number itself.",
+          "Often combined with 'waste' or 'defects' initiatives.",
+          "Four letters, starts with Z."
+        ]
+      }
     ]
-}
+  }

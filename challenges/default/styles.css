@@ -1,17 +1,9 @@
-/* styles.css
-   Minimal, compact UI for Word Circle Game
-   — Uses theme vars set by applyTheme(theme)
-   — Works for both Welcome and Game screens
-   — No in-game Rules/Scoring UI (that stays on Welcome only)
-*/
-
 /* ---------------------------------------
    Fonts & base variables
 --------------------------------------- */
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
 
 :root{
-  /* Fallbacks if theme vars aren't set yet */
   --primary: #E30613;
   --accent: #3498db;
   --correct: #00A651;
@@ -20,7 +12,6 @@
   --card-background: #FFFFFF;
   --text-color: #333333;
 
-  /* Derived */
   --text-secondary: #666;
   --warning: #FF8C00;
 
@@ -43,7 +34,9 @@ body{
   line-height: 1.55;
 }
 
-/* Generic buttons */
+/* ---------------------------------------
+   Generic buttons
+--------------------------------------- */
 button{
   -webkit-tap-highlight-color: transparent;
   appearance: none; border: 0; cursor: pointer;
@@ -56,40 +49,28 @@ button{
 button:hover{ transform: translateY(-1px); box-shadow: var(--shadow-2); }
 button:active{ transform: translateY(0); }
 button:disabled{ opacity:.55; cursor:not-allowed; box-shadow:none; }
+.btn-pass{ background: linear-gradient(135deg, var(--warning), #e67300); }
 
-/* Secondary brand button (Pass) */
-.btn-pass{
-  background: linear-gradient(135deg, var(--warning), #e67300);
-}
-
-/* replace your current .hint-icon + :hover with this */
+/* ---------------------------------------
+   HARD-CODED green hint icon (clear & visible)
+--------------------------------------- */
 .hint-icon{
   flex:0 0 auto;
   width:36px; height:36px; padding:0; min-width:auto;
   display:inline-flex; align-items:center; justify-content:center; cursor:pointer;
 
-  background:#fff;
-  color: var(--correct);                                    /* ✅ green */
+  background:#00A651 !important;     /* solid green */
+  color:#ffffff !important;           /* white icon */
   border-radius:10px;
-  border:1px solid color-mix(in srgb, var(--correct) 35%, #e6e6e6);
-  box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  border:1px solid #008f44 !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,.12);
 }
-.hint-icon:hover{
-  background: color-mix(in srgb, var(--correct) 10%, #fff); /* subtle green tint on hover */
-}
-.hint-icon svg{ color: currentColor; }                      /* make the bulb stroke inherit */
-
-/* Text helpers */
-.small{ font-size:.85rem; color:var(--text-secondary); }
-
-.hint-inline{
-  background: linear-gradient(135deg, var(--correct), color-mix(in srgb, var(--correct) 78%, #000));
-  color:#fff;
-  border:0;
-}
+.hint-icon:hover{ filter:brightness(1.05); }
+.hint-icon svg{ color: currentColor !important; }
+.hint-icon svg path{ stroke: currentColor !important; }
 
 /* ---------------------------------------
-   Loading (the FOUC guard lives in index.html)
+   Loading
 --------------------------------------- */
 .loading-screen{
   position:fixed; inset:0;
@@ -162,51 +143,59 @@ button:disabled{ opacity:.55; cursor:not-allowed; box-shadow:none; }
 }
 
 /* Compact header */
-.compact-header{ border-radius: 16px; overflow:hidden; box-shadow: var(--shadow-2); margin-bottom: 16px; }
+.compact-header{ border-radius: 16px; overflow:hidden; box-shadow: 0 8px 32px rgba(0,0,0,.12); margin-bottom: 18px; }
 .header-top{
   display:flex; align-items:center; justify-content:space-between;
-  background:#2c3e50; color:#fff; padding:10px 14px;
+  background: linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 80%, #000));
+  color:#fff; padding:10px 14px;
 }
-.compact-header h1{ margin:0; font-size:1.1rem; font-weight:800; letter-spacing:.02em; }
+.compact-header h1 { margin:0; font-size:1.1rem; font-weight:700; letter-spacing:.02em; }
+/* --- restore the compact circular back button --- */
 .back-home{
-  display:inline-flex; align-items:center; justify-content:center;
-  width:34px; height:34px; border-radius:50%; min-width:auto;
-  background: rgba(255,255,255,.14); color:#fff;
+  padding: 0 !important;
+  min-width: 0 !important;
+  width: 34px !important;
+  height: 34px !important;
+  border-radius: 50% !important;
+  background: rgba(255,255,255,.14) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
-.back-home:hover{ background: rgba(255,255,255,.22); }
+.back-home:hover{ background: rgba(255,255,255,.22) !important; }
+.back-home svg{ width: 20px; height: 20px; color: currentColor; }
 
-/* One-row scoreboard (5 columns) */
 .header-stats{
   display:grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap:6px;
-  background:#f6f7f8; padding:10px 12px; border-bottom:1px solid #e7e7e7;
+  background: #f6f7f8; padding:10px 12px; border-bottom:1px solid #e5e5e5;
 }
 .stat.mini{
-  background:#fff; border:1px solid #eaeaea; border-radius:10px;
+  background:#fff; border:1px solid #e9e9e9; border-radius:10px;
   padding:8px 10px; text-align:center;
 }
 .stat.mini span{ display:block; font-size:.68rem; color:#667; letter-spacing:.06em; }
-.stat.mini strong{ font-size:1.08rem; color:#102030; }
+.stat.mini strong{ font-size:1.1rem; color:#0f2233; }
 
-/* Timer pill (accent by default, red only last minute) */
+/* Timer pill */
 #timer.timer-mini{
-  display:flex; align-items:center; justify-content:center;
-  background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 80%, #000));
-  color:#fff; font-weight:900; border-radius:10px; border:3px solid rgba(255,255,255,.25);
+  align-self:stretch; display:flex; align-items:center; justify-content:center;
+  background: linear-gradient(135deg, var(--accent) 0%, color-mix(in srgb, var(--accent) 80%, #000) 100%);
+  color:#fff; font-weight:800; border-radius:10px; border:3px solid rgba(255,255,255,.25);
 }
 #timer.timer-mini.timer-urgent{
-  background: linear-gradient(135deg, #FF4444, #CC0000) !important;
+  background: linear-gradient(135deg, #FF4444 0%, #CC0000 100%) !important;
   animation: pulse-urgent 1s infinite;
 }
-@keyframes pulse-urgent{
-  0%,100%{ transform:none; box-shadow: 0 4px 16px rgba(0,0,0,.12); }
-  50%{ transform: scale(1.03); box-shadow: 0 10px 28px rgba(255,0,0,.36); }
+@keyframes pulse-urgent {
+  0%,100% { transform: none; box-shadow: 0 4px 16px rgba(0,0,0,.12); }
+  50% { transform: scale(1.03); box-shadow: 0 10px 28px rgba(255,0,0,.35); }
 }
 
-/* Hide stats (except timer) in preview mode */
-.preview-mode .header-stats .stat.mini{ display:none; }
-.preview-mode .header-stats #timer{ grid-column: 1 / -1; }
-
-/* Rosco (Letter Circle) */
+/* ---------------------------------------
+   Rosco
+--------------------------------------- */
 .rosco-container{
   position:relative; width: 440px; height: 440px; margin: 14px auto;
 }
@@ -217,24 +206,19 @@ button:disabled{ opacity:.55; cursor:not-allowed; box-shadow:none; }
   font-size:84px; font-weight:900; color: var(--primary); opacity:.06; z-index:0;
 }
 .center-image{
-    position:absolute; left:50%; top:50%; transform: translate(-50%,-50%);
-    width:140px; height:140px;
-    background: transparent;
-    border: 0;
-    box-shadow: none;
-    border-radius: 0;
-    display:flex; align-items:center; justify-content:center;
-    z-index:1;
-  }
-
-  #centerLogo{ max-width: 92%; max-height: 92%; }
+  position:absolute; left:50%; top:50%; transform: translate(-50%,-50%);
+  width:140px; height:140px; background: transparent; border:0; box-shadow:none; border-radius:0;
+  display:flex; align-items:center; justify-content:center; z-index:1;
+}
+#centerLogo{ max-width: 92%; max-height: 92%; }
 
 .letter{
   position:absolute; width:56px; height:56px; border-radius:50%;
   background: linear-gradient(135deg, #fff, #f7f7f7);
   border:2px solid #e4e4e4; color: var(--primary); font-weight:800; font-size:18px;
   display:flex; align-items:center; justify-content:center; cursor: default;
-  box-shadow: var(--shadow-1); transition: transform var(--tr), box-shadow var(--tr), background var(--tr), color var(--tr), border-color var(--tr);
+  box-shadow: var(--shadow-1);
+  transition: transform var(--tr), box-shadow var(--tr), background var(--tr), color var(--tr), border-color var(--tr);
 }
 .letter.correct{
   background: linear-gradient(135deg, var(--correct), color-mix(in srgb, var(--correct) 80%, #000));
@@ -265,12 +249,15 @@ button:disabled{ opacity:.55; cursor:not-allowed; box-shadow:none; }
   color: var(--text-secondary); border-color:#e2e2e2; filter: grayscale(35%); opacity:.85;
 }
 
-/* Question block */
+/* ---------------------------------------
+   Question block (inside action bar)
+--------------------------------------- */
 .game-info{
   position:relative; background: linear-gradient(135deg, #fafafa, #f1f1f1);
-  border:1px solid #e7e7e7; border-radius: 14px; padding: 16px;
+  border:1px solid #e7e7e7; border-radius: 14px; padding: 12px;
   box-shadow: inset 0 2px 8px rgba(0,0,0,.04);
 }
+.game-info.in-bar{ margin-bottom: 10px; }
 #definition{ margin:0; font-size: 1.05rem; font-weight:600; color: var(--text-color); }
 .preview-mode #definition{ color: var(--text-secondary); font-style: italic; }
 
@@ -284,8 +271,10 @@ button:disabled{ opacity:.55; cursor:not-allowed; box-shadow:none; }
   box-shadow: var(--shadow-1); font-weight:600;
 }
 
-/* Answer input + buttons */
-.input-container{ display:flex; justify-content:center; margin: 12px 0; }
+/* ---------------------------------------
+   Answer input + buttons
+--------------------------------------- */
+.input-container{ display:flex; justify-content:center; margin: 10px 0; }
 input#answer{
   width: 360px; max-width: 100%; text-align:center;
   padding: 14px 18px; font-size: 1.05rem; font-weight:700; letter-spacing:.02em;
@@ -302,7 +291,9 @@ input#answer:focus{
 .btn-row{ display:flex; gap:12px; margin: 12px 0 4px; }
 .btn-row button{ flex:1; min-width:0; }
 
-/* Final score + results */
+/* ---------------------------------------
+   Final score + results
+--------------------------------------- */
 #finalScore{
   margin: 18px 0; padding: 18px; border-radius: 14px;
   background: linear-gradient(135deg, #fafafa, #f1f1f1);
@@ -337,7 +328,29 @@ input#answer:focus{
 .summary-value.incorrect{ color: var(--incorrect); }
 .summary-value.neutral{ color: var(--primary); }
 
-/* Countdown overlay (3-2-1) */
+/* ---------------------------------------
+   Sticky action bar
+   (desktop => normal flow; mobile => fixed; keyboard-aware)
+--------------------------------------- */
+.actionbar{ }
+@media (max-width: 768px){
+  .game-container{ padding-bottom: 160px; }
+  .actionbar{
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 1000;
+    background: var(--card-background);
+    border-top: 1px solid #e7e7e7; box-shadow: 0 -8px 24px rgba(0,0,0,.12);
+    padding: 12px 16px;
+  }
+  .actionbar .game-info, .actionbar .input-container, .actionbar .btn-row{
+    max-width: 760px; margin-left: auto; margin-right: auto;
+  }
+  .actionbar .input-container{ margin: 8px 0; }
+  .actionbar .btn-row{ margin: 0; gap: 10px; }
+}
+
+/* ---------------------------------------
+   Countdown overlay
+--------------------------------------- */
 #countdownOverlay{
   position: fixed; inset: 0;
   background: rgba(0,0,0,.55); display:none;
@@ -352,92 +365,48 @@ input#answer:focus{
 @keyframes pop{ 0%{ transform: scale(.6); opacity:.2; } 50%{ transform: scale(1.1); opacity:1; } 100%{ transform: scale(1); opacity:.85; } }
 
 /* ---------------------------------------
-   Responsive
+   Print
 --------------------------------------- */
-@media (max-width: 768px){
-  .welcome-container, .game-container{ margin: 10px; padding: 10px; }
-
-  .rosco-container{ width: 320px; height: 320px; }
-  .letter{ width:44px; height:44px; font-size:16px; }
-  .center-image{ width: 96px; height: 96px; }
-  .current-letter{ font-size: 64px; }
-
-  .header-stats{ gap:5px; padding:8px; }
-  .stat.mini{ padding:6px 8px; }
-  .stat.mini strong{ font-size:1rem; }
-}
-
-@media (max-width: 480px){
-  .compact-header{ border-radius: 12px; }
-  .header-top{ padding: 8px 10px; }
-  .compact-header h1{ font-size: .98rem; }
-
-  .header-stats{ gap:4px; padding: 8px; }
-  .stat.mini{ padding:6px; border-radius:8px; }
-  .stat.mini span{ font-size:.62rem; }
-  .stat.mini strong{ font-size:.98rem; }
-  #timer.timer-mini{ font-size: .98rem; border-width: 2px; }
-
-  .rosco-container{ width: 280px; height: 280px; margin: 10px auto; }
-  .letter{ width:36px; height:36px; font-size:14px; }
-  .center-image{ width: 78px; height: 78px; }
-  .current-letter{ font-size: 52px; }
-
-  .game-info{ padding: 12px; }
-  .hint-icon{ width:32px; height:32px; border-radius:8px; }
-
-  .input-container{ margin: 10px 0; }
-  .btn-row{ gap:10px; }
-}
-
-/* Print (results only) */
 @media print{
   body *{ visibility: hidden; }
   #results, #results *{ visibility: visible; }
   #results{ position:absolute; inset:0; width:100%; background:none; box-shadow:none; }
 }
 
-/* Buttons with leading icons */
-.with-ico{
-    display:inline-flex; align-items:center; justify-content:center; gap:10px;
-  }
-  .with-ico svg{
-    width:18px; height:18px; flex:0 0 auto; color:#fff; opacity:.95;
-  }
-
-
-/* Sticky action bar (mobile-first) */
-.actionbar{
-  /* desktop default = normal flow */
-}
-
-@media (max-width: 768px){
-  .game-container{
-    /* leave room so content isn't hidden behind the bar */
-    padding-bottom: 120px; /* updated dynamically too */
-  }
-
-  .actionbar{
-    position: fixed;
-    left: 0; right: 0; bottom: 0;
-    z-index: 1000;
-    background: var(--card-background);
-    border-top: 1px solid #e7e7e7;
-    box-shadow: 0 -8px 24px rgba(0,0,0,.12);
-    padding: 12px 16px;    
-  }
-
-  .actionbar .input-container,
-.actionbar .btn-row{
-  max-width: 760px;                   /* tweak to taste */
-  margin-left: auto;
-  margin-right: auto;
-}
-
-  .actionbar .input-container{ margin: 0 0 10px; }
-  .actionbar .btn-row{ margin: 0; gap: 10px; }
-}
-
-/* Buttons with icons (you already added earlier) */
+/* Buttons with icons */
 .with-ico{ display:inline-flex; align-items:center; justify-content:center; gap:10px; }
 .with-ico svg{ width:18px; height:18px; flex:0 0 auto; color:#fff; opacity:.95; }
+
+/* Hide the sticky bar when game ends */
+.actionbar.hidden{ display:none; }
+
+/* Hint toast (appears above the sticky bar) */
+.actionbar{ position: fixed; }             /* ensure fixed (already set on mobile) */
+.actionbar{ position: fixed; left:0; right:0; bottom:0; } /* safe re-assert */
+.hint-toast{
+  position:absolute;
+  left:16px; right:16px; bottom: calc(100% + 10px);
+  background:#0ea5e9;           /* info tint */
+  color:#fff;
+  border-radius:12px;
+  padding:10px 12px;
+  font-weight:700;
+  box-shadow:0 10px 24px rgba(0,0,0,.18);
+  opacity:0; transform: translateY(6px);
+  pointer-events:none;
+  transition: opacity .18s ease, transform .18s ease;
+}
+.hint-toast.show{ opacity:1; transform: translateY(0); }
+
+/* Hardcoded green hint icon – unmistakable */
+.hint-icon{
+  background:#16a34a !important;
+  color:#fff !important;
+  border:0 !important;
+  box-shadow:0 6px 16px rgba(22,163,74,.35) !important;
+}
+.hint-icon svg path{
+  stroke:#fff !important;
+  fill:none !important;
+}
+.hint-icon:hover{ filter:brightness(1.05); }

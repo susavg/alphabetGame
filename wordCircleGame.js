@@ -40,6 +40,49 @@ class WordCircleGame{
     this.isPreviewMode=false;
   }
 
+  // track which hints were already shown per letter
+_hintHistory = new Map();
+
+isTouchDevice(){ return matchMedia('(pointer:coarse)').matches; }
+
+getFallbackHint(cur){
+  const ans = (cur.word || (cur.answers && cur.answers[0]) || '').trim();
+  if (!ans) return 'No hint available.';
+  const first = ans.charAt(0);
+  const last  = ans.charAt(ans.length - 1);
+  return `Starts with “${first}”, ends with “${last}”, ${ans.length} letters.`;
+}
+
+getRandomHint(cur){
+  const list = Array.isArray(cur.hints) ? cur.hints.filter(Boolean) : [];
+  if (!list.length) return this.getFallbackHint(cur);
+
+  const key = cur.letter || cur.word || JSON.stringify(cur);
+  const used = this._hintHistory.get(key) || new Set();
+
+  // if all used, reset so we can rotate again
+  if (used.size >= list.length) used.clear();
+
+  // pick an unused index
+  let tries = 0, idx;
+  do { idx = Math.floor(Math.random() * list.length); tries++; }
+  while (used.has(idx) && tries < 20);
+
+  used.add(idx);
+  this._hintHistory.set(key, used);
+  return list[idx];
+}
+
+showHintToast(text){
+  const t = document.getElementById('hintToast');
+  if (!t) return alert(text); // fallback if the toast element isn't present
+  t.textContent = text;
+  t.classList.add('show');
+  clearTimeout(this._hintHideTimer);
+  this._hintHideTimer = setTimeout(()=> t.classList.remove('show'), 3200);
+}
+
+
   async init(){
     document.getElementById('loadingScreen').style.display='flex';
 
@@ -63,30 +106,6 @@ class WordCircleGame{
 
     await this.selectChallenge(slug, { silent:true });
     this.setGameContent();
-
-    // Optional “conditions” pills (desktop header or mobile sheet if you add them)
-    const cond = document.getElementById('conditionsBar');
-    if (cond){
-      const gs = this.config.gameSettings || {};
-      const sc = gs.scoring || {};
-      const fm = gs.fuzzyMatching || {};
-      const timeText = Number.isFinite(gs.timeLimit) ? formatTime(gs.timeLimit) : '—';
-      const maxBonus = (Array.isArray(sc.timeBonus?.levels) && sc.timeBonus.levels.length)
-        ? Math.max(...sc.timeBonus.levels.map(l=>l?.bonus??0)) : 0;
-
-      const pills = [
-        `<span class="cond-pill warn">⏱ ${timeText}</span>`,
-        `<span class="cond-pill">💡 Hints: ${gs.maxHints ?? 0}</span>`,
-        `<span class="cond-pill good">✅ +${sc.correct ?? 0}</span>`,
-        `<span class="cond-pill bad">❌ ${sc.incorrect ?? 0}</span>`,
-        `<span class="cond-pill warn">⏭ ${sc.pasapalabra ?? 0}</span>`,
-        fm.enabled ? `<span class="cond-pill">🧠 Fuzzy ≥${Math.round((fm.threshold ?? 0)*100)}%</span>` : `<span class="cond-pill">🧠 Exact match</span>`,
-        gs.penalizeUnanswered ? `<span class="cond-pill bad">⛔ Unanswered = ${sc.incorrect ?? 0}</span>` : `<span class="cond-pill">⛔ Unanswered = 0</span>`,
-        maxBonus ? `<span class="cond-pill good">⚡ Bonus up to +${maxBonus} (≥${sc.timeBonus?.threshold ?? 0} correct)</span>` : ''
-      ].filter(Boolean).join('');
-      cond.innerHTML = pills;
-      const body = document.getElementById('condBody'); if (body) body.innerHTML = pills;
-    }
 
     document.getElementById('loadingScreen').style.display='none';
     document.getElementById('welcomeScreen').style.display='flex';
@@ -164,13 +183,6 @@ class WordCircleGame{
     setText('#gameSubtitle',     (cfg.gameSubtitle||'').trim());
     setText('#gameHeaderTitle',  cfg.gameTitle || 'Word Circle Game');
 
-    const badge = document.getElementById('challengeBadge');
-    if(badge){
-      const st=(cfg.gameSubtitle||'').trim();
-      if(st){ badge.textContent=st.toUpperCase(); badge.style.display='inline-block'; }
-      else  { badge.style.display='none'; }
-    }
-
     setText('#welcomeTimeLimit', formatTime(gs.timeLimit||0));
     setText('#welcomeMaxHints', gs.maxHints ?? 0);
 
@@ -178,10 +190,10 @@ class WordCircleGame{
     setText('#correctPoints',     `+${sc.correct ?? 0} ${pts(sc.correct??0)}`);
     setText('#incorrectPoints',   `${sc.incorrect ?? 0} ${pts(sc.incorrect??0)}`);
     setText('#pasapalabraPoints', `${sc.pasapalabra ?? 0} ${pts(sc.pasapalabra??0)}`);
-    setText('#timeBonusThreshold', tb.threshold ?? 0);
 
     const maxBonus = (Array.isArray(tb.levels) && tb.levels.length)
       ? Math.max(...tb.levels.map(l=>l?.bonus??0)) : 0;
+    setText('#timeBonusThreshold', tb.threshold ?? 0);
     setText('#maxTimeBonus', maxBonus ? `Up to +${maxBonus} points` : '—');
   }
 
@@ -189,11 +201,6 @@ class WordCircleGame{
     document.getElementById('answer').addEventListener('keyup',(e)=>{
       if(e.key==='Enter' && !this.gameEnded) this.checkAnswer();
     });
-
-    const overlay=document.getElementById('condOverlay');
-    document.getElementById('condToggle')?.addEventListener('click',()=>overlay?.classList.add('show'));
-    document.getElementById('condClose')?.addEventListener('click',()=>overlay?.classList.remove('show'));
-    overlay?.addEventListener('click',(e)=>{ if(e.target===overlay) overlay.classList.remove('show'); });
 
     window.addEventListener('resize',()=>this.recalculateRoscoPositions());
     this.setupStickyActionBar();
@@ -220,62 +227,70 @@ class WordCircleGame{
 
     const inp=document.getElementById('answer');
     if(inp){ inp.disabled=false; inp.placeholder='Preview Mode - Type your answer...'; }
-
     const cur=this.remainingWords[this.currentIndex];
     if(cur) document.getElementById('definition').textContent=`[PREVIEW] ${cur.definition}`;
   }
 
   selectWordsFromSet(set){
-    this.words=[];
-    if(!set || typeof set!=='object') return;
-
+    this.words = [];
+    if (!set || typeof set !== 'object') return;
+  
     const letters = Object.keys(set).sort((a,b)=>a.localeCompare(b));
-    for(const key of letters){
-      const list=set[key]; if(!Array.isArray(list)||!list.length) continue;
-      const item=list[Math.floor(Math.random()*list.length)]||{};
-      const answers = Array.isArray(item.answers)&&item.answers.length ? item.answers : (item.word?[item.word]:[]);
-      this.words.push({ letter:key.toUpperCase(), word:item.word||(answers[0]||''), definition:item.definition||'', answers });
+    for (const key of letters){
+      const list = set[key];
+      if (!Array.isArray(list) || !list.length) continue;
+  
+      const item     = list[Math.floor(Math.random()*list.length)] || {};
+      const answers  = Array.isArray(item.answers) && item.answers.length
+        ? item.answers
+        : (item.word ? [item.word] : []);
+      const hints    = Array.isArray(item.hints)
+        ? item.hints.filter(h => typeof h === 'string' && h.trim())
+        : [];
+  
+      this.words.push({
+        letter: key.toUpperCase(),
+        word: item.word || (answers[0] || ''),
+        definition: item.definition || '',
+        answers,
+        hints                                        // ← keep hints!
+      });
     }
     this.words.sort((a,b)=>a.letter.localeCompare(b.letter));
   }
-
   selectRandomWords(){ this.selectWordsFromSet(this.allWords); }
 
   setupStickyActionBar() {
     const bar = document.getElementById('actionBar');
     const gc  = document.getElementById('gameContainer');
     if (!bar || !gc) return;
-  
+
     const setBottomPadding = () => {
       if (matchMedia('(max-width: 768px)').matches) {
-        // keep enough space for the bar
-        gc.style.paddingBottom = Math.max(120, bar.offsetHeight + 24) + 'px';
+        gc.style.paddingBottom = Math.max(160, bar.offsetHeight + 24) + 'px';
       } else {
         gc.style.paddingBottom = '';
         bar.style.transform = '';
       }
     };
-  
+
     setBottomPadding();
     window.addEventListener('resize', setBottomPadding);
-  
-    // Float above the on-screen keyboard using VisualViewport
+
     if (window.visualViewport) {
       const vv = window.visualViewport;
       const reposition = () => {
-        // keyboard height = innerHeight - vv.height - vv.offsetTop
         const kb = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
-        // move the bar up by the keyboard height
         bar.style.transform = kb ? `translateY(-${kb}px)` : '';
       };
       vv.addEventListener('resize', reposition);
       vv.addEventListener('scroll', reposition);
       window.addEventListener('orientationchange', reposition);
     }
-  
+
     const input = document.getElementById('answer');
     input?.addEventListener('focus', () => setTimeout(setBottomPadding, 50));
-    input?.addEventListener('blur',  () => setTimeout(() => { bar.style.transform = ''; }, 50));
+    input?.addEventListener('blur',  () => setTimeout(() => { bar.style.transform = ''; setBottomPadding(); }, 50));
   }
 
   newGame(){
@@ -301,11 +316,16 @@ class WordCircleGame{
     const inp=document.getElementById('answer');
     if(inp){ inp.disabled=false; inp.value=''; inp.placeholder='Type your answer here...'; }
 
+    const gi = document.querySelector('.game-info');
+    if (gi) gi.hidden = true;
+
     const fs=document.getElementById('finalScore'); if(fs){ fs.innerHTML=''; fs.style.display='none'; }
     const vr=document.getElementById('viewResults'); if(vr) vr.style.display='none';
     const res=document.getElementById('results'); if(res){ res.style.display='none'; res.innerHTML=''; }
     const fh=document.getElementById('fuzzyHint'); if(fh) fh.style.display='none';
     const hintsLeft=document.querySelector('.hints-left'); if(hintsLeft) hintsLeft.textContent=this.config.gameSettings.maxHints;
+    
+    document.getElementById('actionBar')?.classList.remove('hidden');
   }
 
   createRosco(){
@@ -351,34 +371,46 @@ class WordCircleGame{
   }
 
   updateGame(){
-    const letters=document.querySelectorAll('.letter');
-    letters.forEach((el,i)=>{
-      el.classList.remove('current');
-      if(this.remainingWords.length>0 && this.words[i]===this.remainingWords[this.currentIndex]) el.classList.add('current');
+    const hasRemaining = this.remainingWords.length > 0;
+    const cur = hasRemaining ? this.remainingWords[this.currentIndex] : null;
+  
+    /* 1) Rosco: mark the current letter */
+    document.querySelectorAll('.letter').forEach(el => {
+      const isCurrent = hasRemaining && el.dataset.letter === cur.letter;
+      el.classList.toggle('current', isCurrent);
     });
-
-    if(this.remainingWords.length>0){
-      const cur=this.remainingWords[this.currentIndex];
-      const prefix=this.isPreviewMode?'[PREVIEW] ':'';
-      const def=document.getElementById('definition'); if(def) def.textContent=prefix+cur.definition;
-      const ld=document.getElementById('currentLetterDisplay'); if(ld) ld.textContent=cur.letter;
-    }else{
-      const def=document.getElementById('definition'); if(def) def.textContent="You've completed all words!";
-      const ld=document.getElementById('currentLetterDisplay'); if(ld) ld.textContent='';
+  
+    /* 2) Question text (in sticky bar) */
+    const def = document.querySelector('#actionBar #definition');
+    if (def){
+      def.textContent = hasRemaining
+        ? (this.isPreviewMode ? '[PREVIEW] ' : '') + cur.definition
+        : "You've completed all words!";
     }
-
-    const inp=document.getElementById('answer');
-    if(inp){ inp.value=''; inp.focus(); inp.placeholder=this.isPreviewMode?'Preview Mode - Type your answer...':'Type your answer here...'; }
-    const fh=document.getElementById('fuzzyHint'); if(fh) fh.style.display='none';
-
-    document.getElementById('correctCount')?.replaceChildren(document.createTextNode(this.correctAnswers));
-    document.getElementById('incorrectCount')?.replaceChildren(document.createTextNode(this.incorrectAnswers));
-    document.getElementById('pointsCount')?.replaceChildren(document.createTextNode(this.totalPoints));
+  
+    /* 3) Big faded letter in the center */
+    const ld = document.getElementById('currentLetterDisplay');
+    if (ld) ld.textContent = hasRemaining ? cur.letter : '';
+  
+    /* 4) Make sure the in-bar question block is visible only while playing */
+    const gi = document.querySelector('#actionBar .game-info');
+    if (gi) gi.hidden = !hasRemaining;
+  
+    /* 5) Hide the “close but not enough” hint */
+    const fh = document.getElementById('fuzzyHint');
+    if (fh) fh.style.display = 'none';
+  
+    /* 6) Update header stats */
+    const setTxt = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    setTxt('correctCount',   this.correctAnswers);
+    setTxt('incorrectCount', this.incorrectAnswers);
+    setTxt('pointsCount',    this.totalPoints);
   }
 
   checkAnswer(){
     if(this.remainingWords.length===0 || this.gameEnded){ this.endGame(); return; }
-    const val=document.getElementById('answer').value.trim(); if(!val) return;
+    const inputEl=document.getElementById('answer');
+    const val=inputEl.value.trim(); if(!val) return;
 
     const cur=this.remainingWords[this.currentIndex];
     const letter=cur.letter;
@@ -409,9 +441,18 @@ class WordCircleGame{
       if(!this.isPreviewMode){ this.incorrectPoints += this.config.gameSettings.scoring.incorrect; this.totalPoints += this.config.gameSettings.scoring.incorrect; }
     }
 
+    // Move on
     this.remainingWords.splice(this.currentIndex,1);
+
+    // Collapse the keyboard after submit
+    inputEl.blur();               // <— important for #3
+    inputEl.value = '';
+
     if(this.remainingWords.length===0) this.endGame();
-    else { if(this.currentIndex>=this.remainingWords.length) this.currentIndex=0; this.updateGame(); }
+    else {
+      if(this.currentIndex>=this.remainingWords.length) this.currentIndex=0;
+      this.updateGame();
+    }
   }
 
   pasapalabra(){
@@ -426,6 +467,8 @@ class WordCircleGame{
         if(!this.isPreviewMode){ this.pasapalabraPoints += this.config.gameSettings.scoring.pasapalabra; this.totalPoints += this.config.gameSettings.scoring.pasapalabra; }
         if(letters[idx]) letters[idx].classList.add('passed');
       }
+
+      // DO NOT focus the input here (prevents keyboard popping on PASS)
       this.currentIndex=(this.currentIndex+1) % this.remainingWords.length;
       this.updateGame();
     }else if(this.remainingWords.length===1){ alert("Only one word remaining. You must answer it!"); }
@@ -433,28 +476,19 @@ class WordCircleGame{
   }
 
   showHint(){
-    if(this.hintsUsed < this.config.gameSettings.maxHints && this.remainingWords.length>0 && !this.gameEnded){
-      const cur=this.remainingWords[this.currentIndex];
-      const ans=cur.word || cur.answers[0];
-      const hint=`The word starts with "${ans.charAt(0)}" and has ${ans.length} letters`;
-
-      document.getElementById('current-hint')?.remove();
-      const el=document.createElement('div');
-      el.id='current-hint'; el.textContent=hint;
-      el.style.cssText=`
-        position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-        background:linear-gradient(135deg, rgba(52,152,219,.9), rgba(41,128,185,.9));
-        color:#fff; padding:12px 18px; border-radius:10px; font-weight:700; z-index:1000; box-shadow:0 8px 25px rgba(0,0,0,.3);
-      `;
-      document.querySelector('.rosco-container').appendChild(el);
-      setTimeout(()=>el.remove(),3000);
-
-      this.hintsUsed++;
-      const left=this.config.gameSettings.maxHints - this.hintsUsed;
-      const t=document.querySelector('.hints-left'); if(t) t.textContent=left;
-    }else if(this.hintsUsed >= this.config.gameSettings.maxHints){
-      alert("You've used all available hints!");
-    }
+    if (this.gameEnded || !this.remainingWords.length) return;
+    const max = this.config.gameSettings.maxHints ?? 0;
+    if (this.hintsUsed >= max) { this.showHintToast("You've used all available hints!"); return; }
+  
+    const cur = this.remainingWords[this.currentIndex];
+    const hint = this.getRandomHint(cur);
+  
+    this.hintsUsed++;
+    const left = Math.max(0, max - this.hintsUsed);
+    const counter = document.querySelector('.hints-left');
+    if (counter) counter.textContent = left;
+  
+    this.showHintToast(hint);
   }
 
   endGame(){
@@ -480,6 +514,8 @@ class WordCircleGame{
       }
     });
 
+    document.getElementById('actionBar')?.classList.add('hidden');
+
     const used = this.config.gameSettings.timeLimit - this.timeLeft;
     this.timeBonus = calculateTimeBonus(this.correctAnswers, used, this.config.gameSettings.scoring.timeBonus);
     this.totalPoints += this.timeBonus;
@@ -493,6 +529,7 @@ class WordCircleGame{
   backToWelcome(){
     document.getElementById('gameContainer').style.display='none';
     document.getElementById('welcomeScreen').style.display='flex';
+    document.getElementById('actionBar')?.classList.add('hidden');
     document.body.classList.remove('preview-mode');
     this.isPreviewMode=false;
     clearInterval(this.timerInterval);
@@ -695,19 +732,6 @@ function applyTheme(theme){
   Object.entries(colors).forEach(([k,v])=>root.style.setProperty('--'+k.replace(/([A-Z])/g,'-$1').toLowerCase(), v));
   const alias={primary:'--primary-color',accent:'--accent-color',correct:'--correct-color',incorrect:'--incorrect-color',background:'--background-color',cardBackground:'--card-background',textColor:'--text-color',textSecondary:'--text-secondary'};
   Object.entries(alias).forEach(([k,cssVar])=>{ if(colors[k]) root.style.setProperty(cssVar, colors[k]); });
-}
-
-function showConfetti(){
-  const colors=['#ff6b6b','#4ecdc4','#45b7d1','#96ceb4','#ffeaa7'];
-  for(let i=0;i<50;i++){
-    setTimeout(()=>{
-      const d=document.createElement('div');
-      Object.assign(d.style,{position:'fixed',width:'10px',height:'10px',backgroundColor:colors[Math.floor(Math.random()*colors.length)],left:Math.random()*window.innerWidth+'px',top:'-10px',zIndex:'9999',pointerEvents:'none',borderRadius:'50%'});
-      document.body.appendChild(d);
-      const anim=d.animate([{transform:'translateY(0) rotate(0)',opacity:1},{transform:`translateY(${window.innerHeight+20}px) rotate(360deg)`,opacity:0}],{duration:3000+Math.random()*2000,easing:'cubic-bezier(0.25,0.46,0.45,0.94)'});
-      anim.onfinish=()=>d.remove();
-    }, i*100);
-  }
 }
 
 /* logo loader */
