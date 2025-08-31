@@ -5,12 +5,9 @@
     "basePath": "challenges/default",
     "title": "Corporate Word Circle",
     "subtitle": "Company Challenge",
-    "logoPath": "logo.svg",
-    "centerLogoPath": "logoRed.png",
-    "stylesPath": "styles.css",
     "gameSettings": {
       "timeLimit": 300,
-      "maxHints": 3,
+      "maxHints": 5,
       "fuzzyMatching": { "enabled": true, "threshold": 0.8, "maxDistance": 2 },
       "penalizeUnanswered": false,
       "scoring": {
@@ -20,22 +17,25 @@
         "timeBonus": {
           "threshold": 10,
           "levels": [
-            { "maxTime": 60, "bonus": 30 },
-            { "maxTime": 120, "bonus": 20 },
-            { "maxTime": 180, "bonus": 10 }
+            { "maxTime": 120, "bonus": 30 },
+            { "maxTime": 180, "bonus": 20 },
+            { "maxTime": 240, "bonus": 10 }
           ]
         }
       }
     },
+    "logoPath": "logo.svg",
+    "centerLogoPath": "logoRed.png",
+    "stylesPath": "styles.css",
     "theme": {
-      "name": "corporate",
+      "name": "henkel",
       "colors": {
-        "primary": "#2c3e50",
-        "accent": "#3498db",
-        "correct": "#2ecc71",
-        "incorrect": "#e74c3c",
-        "background": "#ecf0f1",
-        "cardBackground": "#ffffff",
+        "primary": "#E30613",
+        "accent": "#C10511",
+        "correct": "#00A651",
+        "incorrect": "#E30613",
+        "background": "#F5F5F5",
+        "cardBackground": "#FFFFFF",
         "textColor": "#333333"
       }
     }
