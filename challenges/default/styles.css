@@ -1258,3 +1258,47 @@ button:disabled::before {
     color:#fff;           
     opacity:.95;
   }
+
+/* Preview mode: no scoring tiles, only the timer pill */
+.preview-mode .game-stats .stat-item { display: none !important; }
+.preview-mode #timer { display: inline-flex !important; }
+
+
+/* Inline hint chip (hidden by default; shown on mobile) */
+.hint-inline {
+    display: none;
+    position: absolute;
+    right: 14px;
+    top: 14px;
+    background: linear-gradient(135deg, var(--warning-color) 0%, #e67300 100%);
+    color: #fff;
+    border: 0;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-weight: 700;
+    box-shadow: var(--shadow-light);
+  }
+  
+  /* Compact mobile layout */
+  @media (max-width: 480px) {
+    .game-header { margin-bottom: 8px; padding-bottom: 10px; }
+    .challenge-badge { display: none; }             /* save vertical space */
+    .game-stats { gap: 8px; margin-bottom: 10px; flex-wrap: nowrap; justify-content: space-between; }
+    .stat-item { padding: 8px 10px; min-width: auto; }
+    #timer { font-size: 1.1rem; padding: 8px 14px; border-radius: 22px; }
+  
+    .rosco-container { width: 280px; height: 280px; margin-bottom: 10px; }
+    .game-info { padding: 12px; min-height: auto; margin-bottom: 12px; position: relative; }
+    .input-container { margin: 10px 0; }
+    input { max-width: 100%; width: 100%; }
+  
+    .btn-container { gap: 10px; margin: 12px 0; flex-wrap: nowrap; }
+    .btn-container button { flex: 1; min-width: 0; padding: 12px 14px; border-radius: 999px; }
+    .btn-newgame { display: none !important; }      /* hide NEW GAME on phones */
+    .btn-hint { display: none !important; }         /* hide big HINT on phones */
+    .hint-inline { display: inline-flex; }          /* show small HINT in card */
+  }
+
+  @media (max-width: 480px) {
+    .game-stats { position: sticky; top: 0; background: var(--card-background); z-index: 5; padding: 8px 6px; }
+  }

@@ -9,7 +9,7 @@
     "centerLogoPath": "logoRed.png",
     "stylesPath": "styles.css",
     "gameSettings": {
-      "timeLimit": 500,
+      "timeLimit": 300,
       "maxHints": 3,
       "fuzzyMatching": { "enabled": true, "threshold": 0.8, "maxDistance": 2 },
       "penalizeUnanswered": false,
@@ -46,13 +46,15 @@
       "basePath": "challenges/eu-nrm",
       "title": "EU NRM Team - Challenge 2025",
       "subtitle": "The Alphabet Game",
-      "questionsPath": "questions.json"
+      "questionsPath": "questions.json",
+      "previewPath": "preview.json"
     },
     "sales-directors": {
       "basePath": "challenges/sales-directors",
-      "title": "Sales Directors Bootcamp",
-      "subtitle": "Leadership & Sales Mastery",
-      "questionsPath": "questions.json"
+      "title": "EU Sales Directors Meeting",
+      "subtitle": "The Alphabet Game",
+      "questionsPath": "questions.json",
+      "previewPath": "preview.json"
     }
   }
 }
