@@ -226,12 +226,34 @@ showHintToast(text){
   }
 
   setupEventListeners(){
-    document.getElementById('answer').addEventListener('keyup',(e)=>{
-      if(e.key==='Enter' && !this.gameEnded) this.checkAnswer();
+    // Enter still works
+    document.getElementById('answer').addEventListener('keyup', (e) => {
+      if (e.key === 'Enter' && !this.gameEnded) this.checkAnswer();
     });
-
-    window.addEventListener('resize',()=>this.recalculateRoscoPositions());
+  
+    // Keep your resize & sticky bar listeners
+    window.addEventListener('resize', () => this.recalculateRoscoPositions());
     this.setupStickyActionBar();
+  
+    // --- Fast, reliable tap handlers so iOS doesn't swallow the first tap ---
+    const fastTap = (el, handler) => {
+        if (!el) return;
+        let locked = false;
+        const run = (e) => {
+        e.preventDefault();            // don't let iOS treat it as "dismiss keyboard"
+        e.stopPropagation();
+        if (locked) return;            // avoid duplicate firing (click + touchend)
+        locked = true;
+        handler();
+        setTimeout(() => (locked = false), 50);
+        };
+        el.addEventListener('pointerup', run, { passive: false });
+        el.addEventListener('touchend',  run, { passive: false });
+        el.addEventListener('click',     run);
+    };
+    
+    fastTap(document.getElementById('btnSubmit'), () => this.checkAnswer());
+    fastTap(document.getElementById('btnPass'),   () => this.pasapalabra());
   }
 
   /* ---------- modes ---------- */

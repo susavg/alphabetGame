@@ -164,11 +164,36 @@ button:disabled{ opacity:.55; cursor:not-allowed; box-shadow:none; }
 }
 
 /* Compact header */
-.compact-header{ border-radius: 16px; overflow:hidden; box-shadow: 0 8px 32px rgba(0,0,0,.12); margin-bottom: 18px; }
+.compact-header{
+  position: sticky;
+  top: env(safe-area-inset-top, 0px); /* notch-friendly */
+  z-index: 1100;                      /* above the bottom action bar (1000) */
+
+  /* full-width bleed even inside a centered container */
+  margin-left:  calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  width: 100vw;
+
+  border-radius: 0;                   /* app look */
+  box-shadow: 0 8px 24px rgba(0,0,0,.12);
+}
 .header-top{
   display:flex; align-items:center; justify-content:space-between;
   background: linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 80%, #000));
   color:#fff; padding:10px 14px;
+}
+.header-top{
+  padding-top: calc(10px + env(safe-area-inset-top, 0px));
+}
+:root{ --app-header-height: 116px; } /* tune if your header height changes */
+html{ scroll-padding-top: var(--app-header-height); }
+
+@media (max-width: 768px){
+  .header-top,
+  .header-stats{
+    padding-left: 16px;
+    padding-right: 16px;
+  }
 }
 .compact-header h1 { margin:0; font-size:1.1rem; font-weight:700; letter-spacing:.02em; }
 /* --- restore the compact circular back button --- */
@@ -475,3 +500,5 @@ input#answer{
 }
 /* Inputs remain selectable */
 input, textarea { -webkit-user-select: text; user-select: text; -webkit-touch-callout: default; }
+
+button { touch-action: manipulation; }
