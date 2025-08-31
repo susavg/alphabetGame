@@ -24,7 +24,7 @@
             "word": "Compliance",
             "definition": "A key principle ensuring business practices are legal?",
             "answers": [
-                "Compliance"
+                "Compliance", "Compliant"
             ]
         }
     ],
@@ -149,7 +149,7 @@
             "word": "Pricing",
             "definition": "A key lever in net revenue management?",
             "answers": [
-                "Pricing"
+                "Pricing", "Price"
             ]
         }
     ],
@@ -176,7 +176,7 @@
             "word": "Sustainability",
             "definition": "A business approach focused on environmental impact?",
             "answers": [
-                "Sustainability"
+                "Sustainability", "Sustainable"
             ]
         }
     ],
@@ -218,7 +218,7 @@
             "word": "Website",
             "definition": "A digital platform for selling directly the products to the consumers?",
             "answers": [
-                "Website"
+                "Website", "Web"
             ]
         }
     ],

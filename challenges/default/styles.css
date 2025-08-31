@@ -62,16 +62,31 @@ button:disabled{ opacity:.55; cursor:not-allowed; box-shadow:none; }
   background: linear-gradient(135deg, var(--warning), #e67300);
 }
 
-/* Slim neutral icon button (hint icon in question card) */
+/* replace your current .hint-icon + :hover with this */
 .hint-icon{
-  background:#fff; color:#666; min-width:auto;
-  width:36px; height:36px; padding:0; border-radius:10px;
-  border:1px solid #e7e7e7; box-shadow: var(--shadow-1);
+  flex:0 0 auto;
+  width:36px; height:36px; padding:0; min-width:auto;
+  display:inline-flex; align-items:center; justify-content:center; cursor:pointer;
+
+  background:#fff;
+  color: var(--correct);                                    /* ✅ green */
+  border-radius:10px;
+  border:1px solid color-mix(in srgb, var(--correct) 35%, #e6e6e6);
+  box-shadow: 0 2px 8px rgba(0,0,0,.08);
 }
-.hint-icon:hover{ background:#f8f8f8; }
+.hint-icon:hover{
+  background: color-mix(in srgb, var(--correct) 10%, #fff); /* subtle green tint on hover */
+}
+.hint-icon svg{ color: currentColor; }                      /* make the bulb stroke inherit */
 
 /* Text helpers */
 .small{ font-size:.85rem; color:var(--text-secondary); }
+
+.hint-inline{
+  background: linear-gradient(135deg, var(--correct), color-mix(in srgb, var(--correct) 78%, #000));
+  color:#fff;
+  border:0;
+}
 
 /* ---------------------------------------
    Loading (the FOUC guard lives in index.html)
@@ -389,3 +404,40 @@ input#answer:focus{
   .with-ico svg{
     width:18px; height:18px; flex:0 0 auto; color:#fff; opacity:.95;
   }
+
+
+/* Sticky action bar (mobile-first) */
+.actionbar{
+  /* desktop default = normal flow */
+}
+
+@media (max-width: 768px){
+  .game-container{
+    /* leave room so content isn't hidden behind the bar */
+    padding-bottom: 120px; /* updated dynamically too */
+  }
+
+  .actionbar{
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 1000;
+    background: var(--card-background);
+    border-top: 1px solid #e7e7e7;
+    box-shadow: 0 -8px 24px rgba(0,0,0,.12);
+    padding: 12px 16px;    
+  }
+
+  .actionbar .input-container,
+.actionbar .btn-row{
+  max-width: 760px;                   /* tweak to taste */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+  .actionbar .input-container{ margin: 0 0 10px; }
+  .actionbar .btn-row{ margin: 0; gap: 10px; }
+}
+
+/* Buttons with icons (you already added earlier) */
+.with-ico{ display:inline-flex; align-items:center; justify-content:center; gap:10px; }
+.with-ico svg{ width:18px; height:18px; flex:0 0 auto; color:#fff; opacity:.95; }

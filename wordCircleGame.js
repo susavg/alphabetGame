@@ -196,6 +196,7 @@ class WordCircleGame{
     overlay?.addEventListener('click',(e)=>{ if(e.target===overlay) overlay.classList.remove('show'); });
 
     window.addEventListener('resize',()=>this.recalculateRoscoPositions());
+    this.setupStickyActionBar();
   }
 
   /* ---------- modes ---------- */
@@ -239,6 +240,43 @@ class WordCircleGame{
   }
 
   selectRandomWords(){ this.selectWordsFromSet(this.allWords); }
+
+  setupStickyActionBar() {
+    const bar = document.getElementById('actionBar');
+    const gc  = document.getElementById('gameContainer');
+    if (!bar || !gc) return;
+  
+    const setBottomPadding = () => {
+      if (matchMedia('(max-width: 768px)').matches) {
+        // keep enough space for the bar
+        gc.style.paddingBottom = Math.max(120, bar.offsetHeight + 24) + 'px';
+      } else {
+        gc.style.paddingBottom = '';
+        bar.style.transform = '';
+      }
+    };
+  
+    setBottomPadding();
+    window.addEventListener('resize', setBottomPadding);
+  
+    // Float above the on-screen keyboard using VisualViewport
+    if (window.visualViewport) {
+      const vv = window.visualViewport;
+      const reposition = () => {
+        // keyboard height = innerHeight - vv.height - vv.offsetTop
+        const kb = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+        // move the bar up by the keyboard height
+        bar.style.transform = kb ? `translateY(-${kb}px)` : '';
+      };
+      vv.addEventListener('resize', reposition);
+      vv.addEventListener('scroll', reposition);
+      window.addEventListener('orientationchange', reposition);
+    }
+  
+    const input = document.getElementById('answer');
+    input?.addEventListener('focus', () => setTimeout(setBottomPadding, 50));
+    input?.addEventListener('blur',  () => setTimeout(() => { bar.style.transform = ''; }, 50));
+  }
 
   newGame(){
     this.isPreviewMode=false;
