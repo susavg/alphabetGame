@@ -254,6 +254,13 @@ showHintToast(text){
     
     fastTap(document.getElementById('btnSubmit'), () => this.checkAnswer());
     fastTap(document.getElementById('btnPass'),   () => this.pasapalabra());
+
+    // submit via Enter/Done key or tapping the submit button
+    const form = document.getElementById('answerForm');
+    form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!this.gameEnded) this.checkAnswer();
+    });
   }
 
   /* ---------- modes ---------- */
@@ -316,17 +323,22 @@ showHintToast(text){
     if (!bar || !gc) return;
   
     const setBottomPadding = () => {
+      // expose the actual height to CSS as a custom prop too
+      document.documentElement.style.setProperty('--actionbar-height', bar.offsetHeight + 'px');
+  
       if (matchMedia('(max-width: 768px)').matches) {
-        gc.style.paddingBottom = Math.max(160, bar.offsetHeight + 24) + 'px';
+        gc.style.paddingBottom = Math.max(120, bar.offsetHeight + 16) + 'px';
       } else {
         gc.style.paddingBottom = '';
         bar.style.transform = '';
       }
     };
+  
     setBottomPadding();
     window.addEventListener('resize', setBottomPadding);
+    bar.addEventListener('transitionend', setBottomPadding); // when .compact toggles
   
-    // Keyboard-aware reposition for the bar (kept)
+    // Keyboard-aware reposition (unchanged)
     if (window.visualViewport) {
       const vv = window.visualViewport;
       const reposition = () => {
@@ -338,7 +350,7 @@ showHintToast(text){
       window.addEventListener('orientationchange', reposition);
     }
   
-    // NEW — freeze/unfreeze body scroll so the rosco doesn't jump
+    // Freeze/unfreeze to stop layout jump + toggle compact
     const input = document.getElementById('answer');
     let scrollY = 0;
     const freeze = () => {
@@ -354,8 +366,16 @@ showHintToast(text){
       window.scrollTo(0, scrollY);
     };
   
-    input?.addEventListener('focus', () => { setTimeout(setBottomPadding, 50); freeze(); });
-    input?.addEventListener('blur',  () => { unfreeze(); setTimeout(() => { bar.style.transform = ''; setBottomPadding(); }, 50); });
+    input?.addEventListener('focus', () => {
+      bar.classList.add('compact');      // <- icon-only
+      setTimeout(setBottomPadding, 50);
+      freeze();
+    });
+    input?.addEventListener('blur', () => {
+      bar.classList.remove('compact');   // <- restore labels
+      unfreeze();
+      setTimeout(() => { bar.style.transform = ''; setBottomPadding(); }, 50);
+    });
   }
 
   newGame(){
