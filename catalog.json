@@ -11,8 +11,8 @@
       "fuzzyMatching": { "enabled": true, "threshold": 0.8, "maxDistance": 2 },
       "penalizeUnanswered": false,
       "scoring": {
-        "correct": 3,
-        "incorrect": -2,
+        "correct": 5,
+        "incorrect": -3,
         "pasapalabra": -1,
         "timeBonus": {
           "threshold": 10,
