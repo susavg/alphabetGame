@@ -161,26 +161,9 @@
               GitHub
             </a>
             <span style="color: #ccc;">|</span>
-            <button id="downloadChallengeBtn" onclick="showDownloadOptions()" style="background: none; border: none; color: #666; text-decoration: none; font-size: 0.9rem; opacity: 0.7; transition: opacity 0.2s; cursor: pointer; padding: 0; font-family: inherit;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">
-              📥 Download Challenge
-            </button>
-            <span style="color: #ccc;">|</span>
             <a href="/admin.html" style="color: #666; text-decoration: none; font-size: 0.9rem; opacity: 0.7; transition: opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">
               🔒 Admin Panel
             </a>
-          </div>
-        </div>
-
-        <!-- Download Options Modal -->
-        <div id="downloadModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center; padding: 20px;">
-          <div style="background: white; border-radius: 8px; max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto; padding: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
-            <h3 style="margin-bottom: 1rem; color: #E30613;">Download Challenge Files</h3>
-            <div id="downloadOptionsContent">
-              <p>Loading challenges...</p>
-            </div>
-            <button onclick="closeDownloadOptions()" style="margin-top: 1.5rem; background: #6c757d; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; width: 100%;">
-              Close
-            </button>
           </div>
         </div>
       </div>
@@ -408,69 +391,6 @@
     })();
   </script>
 
-  <script>
-    // Download challenge modal functions
-    async function showDownloadOptions() {
-      const modal = document.getElementById('downloadModal');
-      const content = document.getElementById('downloadOptionsContent');
-      modal.style.display = 'flex';
-
-      try {
-        const response = await fetch('/catalog.json');
-        if (!response.ok) throw new Error('Failed to load catalog');
-
-        const catalog = await response.json();
-
-        if (!catalog.challenges || Object.keys(catalog.challenges).length === 0) {
-          content.innerHTML = '<p style="color: #666;">No challenges available.</p>';
-          return;
-        }
-
-        const buttons = Object.entries(catalog.challenges).map(([slug, config]) => {
-          const basePath = config.basePath || `challenges/${slug}`;
-          const questionsPath = config.questionsPath || 'questions.json';
-          const previewPath = config.previewPath || 'preview.json';
-
-          const questionsUrl = questionsPath.startsWith('http') ? questionsPath : `${basePath}/${questionsPath}`;
-          const previewUrl = previewPath.startsWith('http') ? previewPath : `${basePath}/${previewPath}`;
-
-          return `
-            <div style="margin-bottom: 1rem; padding: 1rem; background: #f5f5f5; border-radius: 4px;">
-              <h4 style="margin: 0 0 0.5rem; color: #E30613;">${config.title || slug}</h4>
-              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                <a href="${questionsUrl}" download="${slug}-questions.json" style="flex: 1; text-decoration: none;">
-                  <button style="width: 100%; background: #00A651; color: white; border: none; padding: 0.5rem; border-radius: 4px; cursor: pointer;">
-                    📄 Questions
-                  </button>
-                </a>
-                <a href="${previewUrl}" download="${slug}-preview.json" style="flex: 1; text-decoration: none;">
-                  <button style="width: 100%; background: #6c757d; color: white; border: none; padding: 0.5rem; border-radius: 4px; cursor: pointer;">
-                    👁️ Preview
-                  </button>
-                </a>
-              </div>
-            </div>
-          `;
-        }).join('');
-
-        content.innerHTML = buttons;
-      } catch (error) {
-        console.error('Error loading challenges:', error);
-        content.innerHTML = '<p style="color: #E30613;">Error loading challenges. Please try again.</p>';
-      }
-    }
-
-    function closeDownloadOptions() {
-      document.getElementById('downloadModal').style.display = 'none';
-    }
-
-    // Close modal when clicking outside
-    document.getElementById('downloadModal')?.addEventListener('click', function(e) {
-      if (e.target === this) {
-        closeDownloadOptions();
-      }
-    });
-  </script>
 </body>
 
 </html>

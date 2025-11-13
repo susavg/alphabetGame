@@ -497,23 +497,11 @@ async function loadDownloadButtons() {
     }
 
     const buttons = Object.entries(catalog.challenges).map(([slug, config]) => {
-      const basePath = config.basePath || `challenges/${slug}`;
-      const questionsPath = config.questionsPath || 'questions.json';
-      const previewPath = config.previewPath || 'preview.json';
-
-      // Use full URL if path starts with http, otherwise use relative path
-      const questionsUrl = questionsPath.startsWith('http') ? questionsPath : `${basePath}/${questionsPath}`;
-      const previewUrl = previewPath.startsWith('http') ? previewPath : `${basePath}/${previewPath}`;
-
       return `
-        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
-          <a href="${questionsUrl}" download="${slug}-questions.json" style="text-decoration: none; flex: 1;">
-            <button type="button" style="width: 100%;">📄 ${config.title || slug} - Questions</button>
-          </a>
-          <a href="${previewUrl}" download="${slug}-preview.json" style="text-decoration: none; flex: 1;">
-            <button type="button" class="secondary" style="width: 100%;">👁️ Preview</button>
-          </a>
-        </div>
+        <button type="button" onclick="downloadChallenge('${slug}')" style="width: 100%; padding: 1rem; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); color: white; border: none; border-radius: 4px; font-weight: 500; cursor: pointer; transition: background 0.2s; text-align: left;">
+          <div style="font-size: 1.1rem; margin-bottom: 0.25rem;">📦 ${config.title || slug}</div>
+          <div style="font-size: 0.85rem; opacity: 0.8;">Download template files</div>
+        </button>
       `;
     }).join('');
 
@@ -522,6 +510,32 @@ async function loadDownloadButtons() {
     console.error('Error loading download buttons:', error);
     document.getElementById('downloadChallengesButtons').innerHTML =
       '<p style="color: #E30613;">Error loading challenges. Please refresh the page.</p>';
+  }
+}
+
+// Download challenge as combined JSON file
+async function downloadChallenge(slug) {
+  try {
+    const response = await fetch(`${API_BASE}/api/download-challenge?slug=${slug}`);
+    if (!response.ok) {
+      throw new Error('Failed to download challenge');
+    }
+
+    const data = await response.json();
+
+    // Create a downloadable JSON file
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${slug}-template.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('Download error:', error);
+    alert('Failed to download challenge: ' + error.message);
   }
 }
 
