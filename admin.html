@@ -398,13 +398,25 @@
 
       <!-- Template Download Section -->
       <div class="template-section">
-        <h2>📥 Download Templates</h2>
-        <p style="margin-bottom: 1rem;">Start by downloading template files to create your own challenges</p>
+        <h2>📥 Download Example Challenges</h2>
+        <p style="margin-bottom: 1rem;">Download existing challenge folders to use as templates</p>
         <div class="template-buttons">
-          <button onclick="downloadTemplate('questions')">📄 Download Questions Template</button>
-          <button onclick="downloadTemplate('preview')">📄 Download Preview Template</button>
-          <button onclick="downloadExistingChallenge()">📦 Download Existing Challenge</button>
+          <a href="https://github.com/susavg/alphabetGame/archive/refs/heads/main.zip" target="_blank" style="text-decoration: none;">
+            <button type="button">📦 Download Full Repository (ZIP)</button>
+          </a>
+          <a href="challenges/sales-directors/questions.json" download="sales-directors-questions.json" style="text-decoration: none;">
+            <button type="button">📄 Sales Directors - Questions</button>
+          </a>
+          <a href="challenges/sales-directors/preview.json" download="sales-directors-preview.json" style="text-decoration: none;">
+            <button type="button">📄 Sales Directors - Preview</button>
+          </a>
+          <a href="challenges/eu-nrm/questions.json" download="eu-nrm-questions.json" style="text-decoration: none;">
+            <button type="button">📄 EU NRM - Questions</button>
+          </a>
         </div>
+        <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.9;">
+          💡 <strong>Tip:</strong> Download the full repository to get all example challenges and assets, then extract and modify the challenge folders you need.
+        </p>
       </div>
 
       <!-- Upload New Challenge -->

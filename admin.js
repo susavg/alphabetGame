@@ -269,33 +269,10 @@ function readFileAsText(file) {
   });
 }
 
-// Template downloads
-async function downloadTemplate(type) {
-  try {
-    const response = await fetch(`${API_BASE}/api/generate-template?type=${type}`);
-    const data = await response.json();
-
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${type}-template.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  } catch (error) {
-    alert('Error downloading template: ' + error.message);
-  }
-}
-
-// Download existing challenge
-async function downloadExistingChallenge() {
-  const slug = prompt('Enter the challenge slug to download:');
-  if (!slug) return;
-
-  await downloadChallenge(slug);
-}
+// Template downloads - DEPRECATED: Using direct download links in HTML now
+// async function downloadTemplate(type) {...}
+// async function downloadExistingChallenge() {...}
+// These functions are no longer needed as we use direct links to GitHub and local files
 
 async function downloadChallenge(slug) {
   try {
