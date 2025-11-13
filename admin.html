@@ -475,22 +475,23 @@
       <!-- Active Challenge Configuration -->
       <div class="card">
         <h2>🎯 Set Active (Default) Challenge</h2>
-        <p style="margin-bottom: 1rem;">To change which challenge loads by default, edit the <code>defaultSlug</code> in <strong>catalog.json</strong>:</p>
-        <div class="file-preview">
-{
-  "routing": {
-    "param": "challenge",
-    "defaultSlug": "ecommerce-convention-2025"
-  },
-  ...
-}
-        </div>
-        <p style="margin-top: 1rem; color: #6c757d; font-size: 0.9rem;">
-          💡 <strong>Tip:</strong> Change <code>defaultSlug</code> to any challenge key from the <code>challenges</code> section below.
-        </p>
-        <p style="margin-top: 0.5rem; color: #6c757d; font-size: 0.9rem;">
-          📝 Available challenges: <code>ecommerce-convention-2025</code>, <code>sales-directors</code>, <code>eu-nrm</code>
-        </p>
+        <div id="activeMessage"></div>
+        <p style="margin-bottom: 1rem;">Select which challenge loads by default when users visit the site:</p>
+
+        <form id="activeChallengeForm" onsubmit="setActiveChallenge(event)">
+          <div class="form-group">
+            <label for="activeChallenge">Default Challenge</label>
+            <select id="activeChallenge" required>
+              <option value="">Loading challenges...</option>
+            </select>
+            <div class="help-text">This challenge will load automatically when users visit the site without a specific challenge parameter</div>
+          </div>
+
+          <div class="btn-group">
+            <button type="submit">💾 Save Active Challenge</button>
+            <button type="button" class="secondary" onclick="loadActiveChallengeForm()">🔄 Refresh</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

@@ -336,3 +336,109 @@ async function deleteChallenge(slug) {
     alert('❌ Delete error: ' + error.message);
   }
 }
+
+// Active Challenge Management
+async function loadActiveChallengeForm() {
+  try {
+    // Fetch catalog.json
+    const response = await fetch(`${API_BASE}/catalog.json`);
+    if (!response.ok) {
+      throw new Error('Failed to load catalog');
+    }
+
+    const catalog = await response.json();
+    const select = document.getElementById('activeChallenge');
+    const currentActive = catalog.routing?.defaultSlug || '';
+
+    // Clear existing options
+    select.innerHTML = '';
+
+    // Add options from challenges
+    if (catalog.challenges) {
+      Object.keys(catalog.challenges).forEach(slug => {
+        const challenge = catalog.challenges[slug];
+        const option = document.createElement('option');
+        option.value = slug;
+        option.textContent = challenge.title || slug;
+        if (slug === currentActive) {
+          option.selected = true;
+        }
+        select.appendChild(option);
+      });
+    }
+
+    // Show current active challenge
+    if (currentActive) {
+      showActiveMessage(`Current active challenge: <strong>${currentActive}</strong>`, 'info');
+    }
+  } catch (error) {
+    console.error('Error loading challenges:', error);
+    showActiveMessage('Error loading challenges: ' + error.message, 'error');
+  }
+}
+
+async function setActiveChallenge(event) {
+  event.preventDefault();
+
+  const slug = document.getElementById('activeChallenge').value;
+  if (!slug) {
+    showActiveMessage('Please select a challenge', 'error');
+    return;
+  }
+
+  try {
+    // Fetch current catalog
+    const response = await fetch(`${API_BASE}/catalog.json`);
+    if (!response.ok) {
+      throw new Error('Failed to load catalog');
+    }
+
+    const catalog = await response.json();
+
+    // Update defaultSlug
+    if (!catalog.routing) {
+      catalog.routing = { param: 'challenge' };
+    }
+    catalog.routing.defaultSlug = slug;
+
+    // Send update to API
+    const updateResponse = await fetch(`${API_BASE}/api/update-catalog`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-admin-password': adminPassword
+      },
+      body: JSON.stringify(catalog)
+    });
+
+    if (!updateResponse.ok) {
+      const error = await updateResponse.json();
+      throw new Error(error.error || 'Failed to update catalog');
+    }
+
+    showActiveMessage(`✅ Active challenge changed to: <strong>${slug}</strong>`, 'success');
+    loadActiveChallengeForm(); // Refresh the form
+  } catch (error) {
+    console.error('Error setting active challenge:', error);
+    showActiveMessage('❌ Error: ' + error.message, 'error');
+  }
+}
+
+function showActiveMessage(message, type) {
+  const container = document.getElementById('activeMessage');
+  container.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+  setTimeout(() => {
+    container.innerHTML = '';
+  }, 5000);
+}
+
+// Load active challenge form on page load
+window.addEventListener('DOMContentLoaded', () => {
+  const savedPassword = localStorage.getItem('adminPassword');
+  if (savedPassword) {
+    adminPassword = savedPassword;
+    document.getElementById('authScreen').classList.add('hidden');
+    document.getElementById('adminPanel').classList.remove('hidden');
+    loadActiveChallengeForm();
+  }
+});
