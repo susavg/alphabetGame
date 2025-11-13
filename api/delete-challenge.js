@@ -9,7 +9,7 @@ import { join } from 'path';
 
 // Simple authentication check
 function isAuthenticated(req) {
-  const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+  const adminPassword = process.env.GAME_ADMIN_SECRET || 'admin123';
   const providedPassword = req.headers['x-admin-password'];
   return providedPassword === adminPassword;
 }
