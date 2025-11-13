@@ -1,5 +1,5 @@
 {
-  "routing": { "param": "challenge", "defaultSlug": "eComm-Conv-2025" },
+  "routing": { "param": "challenge", "defaultSlug": "ecommerce-convention-2025" },
 
   "default": {
     "basePath": "challenges/default",
