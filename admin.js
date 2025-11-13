@@ -480,6 +480,51 @@ function showActiveMessage(message, type) {
   }, 5000);
 }
 
+// Load download buttons for challenges
+async function loadDownloadButtons() {
+  try {
+    const response = await fetch(`${API_BASE}/catalog.json`);
+    if (!response.ok) {
+      throw new Error('Failed to load catalog');
+    }
+
+    const catalog = await response.json();
+    const container = document.getElementById('downloadChallengesButtons');
+
+    if (!catalog.challenges || Object.keys(catalog.challenges).length === 0) {
+      container.innerHTML = '<p style="opacity: 0.6;">No challenges available yet.</p>';
+      return;
+    }
+
+    const buttons = Object.entries(catalog.challenges).map(([slug, config]) => {
+      const basePath = config.basePath || `challenges/${slug}`;
+      const questionsPath = config.questionsPath || 'questions.json';
+      const previewPath = config.previewPath || 'preview.json';
+
+      // Use full URL if path starts with http, otherwise use relative path
+      const questionsUrl = questionsPath.startsWith('http') ? questionsPath : `${basePath}/${questionsPath}`;
+      const previewUrl = previewPath.startsWith('http') ? previewPath : `${basePath}/${previewPath}`;
+
+      return `
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
+          <a href="${questionsUrl}" download="${slug}-questions.json" style="text-decoration: none; flex: 1;">
+            <button type="button" style="width: 100%;">📄 ${config.title || slug} - Questions</button>
+          </a>
+          <a href="${previewUrl}" download="${slug}-preview.json" style="text-decoration: none; flex: 1;">
+            <button type="button" class="secondary" style="width: 100%;">👁️ Preview</button>
+          </a>
+        </div>
+      `;
+    }).join('');
+
+    container.innerHTML = buttons;
+  } catch (error) {
+    console.error('Error loading download buttons:', error);
+    document.getElementById('downloadChallengesButtons').innerHTML =
+      '<p style="color: #E30613;">Error loading challenges. Please refresh the page.</p>';
+  }
+}
+
 // Load active challenge form on page load
 window.addEventListener('DOMContentLoaded', () => {
   const savedPassword = localStorage.getItem('adminPassword');
@@ -488,5 +533,6 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('authScreen').classList.add('hidden');
     document.getElementById('adminPanel').classList.remove('hidden');
     loadActiveChallengeForm();
+    loadDownloadButtons();
   }
 });

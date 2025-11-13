@@ -153,9 +153,35 @@
         </div>
 
         <div style="text-align: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(0,0,0,0.1);">
-          <a href="/admin.html" style="color: #666; text-decoration: none; font-size: 0.9rem; opacity: 0.7; transition: opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">
-            🔒 Admin Panel
-          </a>
+          <div style="display: flex; gap: 1rem; justify-content: center; align-items: center; flex-wrap: wrap;">
+            <a href="https://github.com/susavg/alphabetGame" target="_blank" rel="noopener noreferrer" style="color: #666; text-decoration: none; font-size: 0.9rem; opacity: 0.7; transition: opacity 0.2s; display: inline-flex; align-items: center; gap: 0.3rem;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">
+              <svg height="14" width="14" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+              </svg>
+              GitHub
+            </a>
+            <span style="color: #ccc;">|</span>
+            <button id="downloadChallengeBtn" onclick="showDownloadOptions()" style="background: none; border: none; color: #666; text-decoration: none; font-size: 0.9rem; opacity: 0.7; transition: opacity 0.2s; cursor: pointer; padding: 0; font-family: inherit;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">
+              📥 Download Challenge
+            </button>
+            <span style="color: #ccc;">|</span>
+            <a href="/admin.html" style="color: #666; text-decoration: none; font-size: 0.9rem; opacity: 0.7; transition: opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.7'">
+              🔒 Admin Panel
+            </a>
+          </div>
+        </div>
+
+        <!-- Download Options Modal -->
+        <div id="downloadModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center; padding: 20px;">
+          <div style="background: white; border-radius: 8px; max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto; padding: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.2);">
+            <h3 style="margin-bottom: 1rem; color: #E30613;">Download Challenge Files</h3>
+            <div id="downloadOptionsContent">
+              <p>Loading challenges...</p>
+            </div>
+            <button onclick="closeDownloadOptions()" style="margin-top: 1.5rem; background: #6c757d; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 4px; cursor: pointer; width: 100%;">
+              Close
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -380,6 +406,70 @@
         return r;
       };
     })();
+  </script>
+
+  <script>
+    // Download challenge modal functions
+    async function showDownloadOptions() {
+      const modal = document.getElementById('downloadModal');
+      const content = document.getElementById('downloadOptionsContent');
+      modal.style.display = 'flex';
+
+      try {
+        const response = await fetch('/catalog.json');
+        if (!response.ok) throw new Error('Failed to load catalog');
+
+        const catalog = await response.json();
+
+        if (!catalog.challenges || Object.keys(catalog.challenges).length === 0) {
+          content.innerHTML = '<p style="color: #666;">No challenges available.</p>';
+          return;
+        }
+
+        const buttons = Object.entries(catalog.challenges).map(([slug, config]) => {
+          const basePath = config.basePath || `challenges/${slug}`;
+          const questionsPath = config.questionsPath || 'questions.json';
+          const previewPath = config.previewPath || 'preview.json';
+
+          const questionsUrl = questionsPath.startsWith('http') ? questionsPath : `${basePath}/${questionsPath}`;
+          const previewUrl = previewPath.startsWith('http') ? previewPath : `${basePath}/${previewPath}`;
+
+          return `
+            <div style="margin-bottom: 1rem; padding: 1rem; background: #f5f5f5; border-radius: 4px;">
+              <h4 style="margin: 0 0 0.5rem; color: #E30613;">${config.title || slug}</h4>
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <a href="${questionsUrl}" download="${slug}-questions.json" style="flex: 1; text-decoration: none;">
+                  <button style="width: 100%; background: #00A651; color: white; border: none; padding: 0.5rem; border-radius: 4px; cursor: pointer;">
+                    📄 Questions
+                  </button>
+                </a>
+                <a href="${previewUrl}" download="${slug}-preview.json" style="flex: 1; text-decoration: none;">
+                  <button style="width: 100%; background: #6c757d; color: white; border: none; padding: 0.5rem; border-radius: 4px; cursor: pointer;">
+                    👁️ Preview
+                  </button>
+                </a>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        content.innerHTML = buttons;
+      } catch (error) {
+        console.error('Error loading challenges:', error);
+        content.innerHTML = '<p style="color: #E30613;">Error loading challenges. Please try again.</p>';
+      }
+    }
+
+    function closeDownloadOptions() {
+      document.getElementById('downloadModal').style.display = 'none';
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('downloadModal')?.addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeDownloadOptions();
+      }
+    });
   </script>
 </body>
 
