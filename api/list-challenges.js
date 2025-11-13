@@ -5,7 +5,6 @@
 
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
-import { list } from '@vercel/blob';
 
 export default async function handler(req, res) {
   // CORS headers
@@ -29,12 +28,21 @@ export default async function handler(req, res) {
       catalog = JSON.parse(readFileSync(catalogPath, 'utf-8'));
     }
 
-    // Get all blobs to show what's in storage
-    const { blobs } = await list();
+    // Try to get blobs if Blob Storage is configured
+    let blobs = [];
+    try {
+      if (process.env.BLOB_READ_WRITE_TOKEN) {
+        const { list } = await import('@vercel/blob');
+        const result = await list();
+        blobs = result.blobs || [];
+      }
+    } catch (blobError) {
+      console.log('Blob storage not available:', blobError.message);
+    }
 
     const challengesWithDetails = Object.entries(catalog.challenges || {}).map(([slug, config]) => {
-      // Find associated blobs
-      const challengeBlobs = blobs.filter(blob => blob.pathname.startsWith(`challenges/${slug}/`));
+      // Find associated blobs if available
+      const challengeBlobs = blobs.filter(blob => blob.pathname?.startsWith(`challenges/${slug}/`));
 
       return {
         slug,
