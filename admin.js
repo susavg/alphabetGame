@@ -84,7 +84,6 @@ async function uploadChallenge() {
   const questionsFile = document.getElementById('questionsFile').files[0];
   const previewFile = document.getElementById('previewFile').files[0];
   const logoFile = document.getElementById('logoFile').files[0];
-  const timeLimit = document.getElementById('timeLimit').value;
 
   if (!slug || !title || !questionsFile) {
     showUploadMessage('Please fill in required fields', 'error');
@@ -124,14 +123,63 @@ async function uploadChallenge() {
   formData.append('slug', slug);
   formData.append('questions', questionsFile);
 
-  const config = {
-    title,
-    subtitle: subtitle || 'The Alphabet Game'
+  // Build game settings
+  const gameSettings = {};
+
+  // Time limit
+  const timeLimit = document.getElementById('timeLimit').value;
+  if (timeLimit) {
+    gameSettings.timeLimit = parseInt(timeLimit);
+  }
+
+  // Max hints
+  const maxHints = document.getElementById('maxHints').value;
+  if (maxHints) {
+    gameSettings.maxHints = parseInt(maxHints);
+  }
+
+  // Fuzzy matching
+  const fuzzyEnabled = document.getElementById('fuzzyMatchingEnabled').checked;
+  const fuzzyThreshold = document.getElementById('fuzzyThreshold').value;
+  const fuzzyMaxDistance = document.getElementById('fuzzyMaxDistance').value;
+
+  gameSettings.fuzzyMatching = {
+    enabled: fuzzyEnabled,
+    threshold: fuzzyThreshold ? parseFloat(fuzzyThreshold) : 0.8,
+    maxDistance: fuzzyMaxDistance ? parseInt(fuzzyMaxDistance) : 2
   };
 
-  if (timeLimit) {
-    config.gameSettings = { timeLimit: parseInt(timeLimit) };
-  }
+  // Penalize unanswered
+  gameSettings.penalizeUnanswered = document.getElementById('penalizeUnanswered').checked;
+
+  // Scoring
+  const correctPoints = document.getElementById('correctPoints').value;
+  const incorrectPoints = document.getElementById('incorrectPoints').value;
+  const pasapalabraPoints = document.getElementById('pasapalabraPoints').value;
+  const timeBonusThreshold = document.getElementById('timeBonusThreshold').value;
+  const timeBonus120 = document.getElementById('timeBonus120').value;
+  const timeBonus180 = document.getElementById('timeBonus180').value;
+  const timeBonus240 = document.getElementById('timeBonus240').value;
+
+  gameSettings.scoring = {
+    correct: correctPoints ? parseInt(correctPoints) : 5,
+    incorrect: incorrectPoints ? parseInt(incorrectPoints) : -3,
+    pasapalabra: pasapalabraPoints ? parseInt(pasapalabraPoints) : -1,
+    timeBonus: {
+      threshold: timeBonusThreshold ? parseInt(timeBonusThreshold) : 10,
+      levels: [
+        { maxTime: 120, bonus: timeBonus120 ? parseInt(timeBonus120) : 30 },
+        { maxTime: 180, bonus: timeBonus180 ? parseInt(timeBonus180) : 20 },
+        { maxTime: 240, bonus: timeBonus240 ? parseInt(timeBonus240) : 10 }
+      ]
+    }
+  };
+
+  const config = {
+    title,
+    subtitle: subtitle || 'The Alphabet Game',
+    gameSettings
+  };
 
   formData.append('config', JSON.stringify(config));
 

@@ -465,6 +465,86 @@
             <div class="help-text">Default: 300 seconds (5 minutes)</div>
           </div>
 
+          <div class="form-group">
+            <label for="maxHints">Maximum Hints</label>
+            <input type="number" id="maxHints" placeholder="5" min="0" max="26">
+            <div class="help-text">Default: 5 hints per game</div>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="fuzzyMatchingEnabled" checked>
+              Enable Fuzzy Matching
+            </label>
+            <div class="help-text">Accepts similar answers (e.g., typos, close matches)</div>
+          </div>
+
+          <div class="form-group">
+            <label for="fuzzyThreshold">Fuzzy Matching Threshold</label>
+            <input type="number" id="fuzzyThreshold" placeholder="0.8" min="0" max="1" step="0.1">
+            <div class="help-text">Default: 0.8 (80% similarity required)</div>
+          </div>
+
+          <div class="form-group">
+            <label for="fuzzyMaxDistance">Fuzzy Match Max Distance</label>
+            <input type="number" id="fuzzyMaxDistance" placeholder="2" min="0" max="10">
+            <div class="help-text">Default: 2 (maximum character differences)</div>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="penalizeUnanswered">
+              Penalize Unanswered Questions
+            </label>
+            <div class="help-text">Default: disabled (no penalty for skipped questions)</div>
+          </div>
+
+          <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary);">📊 Scoring Settings</h3>
+
+          <div class="form-group">
+            <label for="correctPoints">Points for Correct Answer</label>
+            <input type="number" id="correctPoints" placeholder="5" min="0" max="100">
+            <div class="help-text">Default: 5 points</div>
+          </div>
+
+          <div class="form-group">
+            <label for="incorrectPoints">Points for Incorrect Answer</label>
+            <input type="number" id="incorrectPoints" placeholder="-3" min="-100" max="0">
+            <div class="help-text">Default: -3 points (penalty)</div>
+          </div>
+
+          <div class="form-group">
+            <label for="pasapalabraPoints">Points for Passing (Pasapalabra)</label>
+            <input type="number" id="pasapalabraPoints" placeholder="-1" min="-100" max="0">
+            <div class="help-text">Default: -1 points</div>
+          </div>
+
+          <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary);">⚡ Time Bonus Settings</h3>
+
+          <div class="form-group">
+            <label for="timeBonusThreshold">Time Bonus Threshold (questions)</label>
+            <input type="number" id="timeBonusThreshold" placeholder="10" min="0" max="26">
+            <div class="help-text">Default: 10 (minimum correct answers to qualify for time bonus)</div>
+          </div>
+
+          <div class="form-group">
+            <label for="timeBonus120">Bonus for completing under 120 seconds</label>
+            <input type="number" id="timeBonus120" placeholder="30" min="0" max="100">
+            <div class="help-text">Default: 30 points</div>
+          </div>
+
+          <div class="form-group">
+            <label for="timeBonus180">Bonus for completing under 180 seconds</label>
+            <input type="number" id="timeBonus180" placeholder="20" min="0" max="100">
+            <div class="help-text">Default: 20 points</div>
+          </div>
+
+          <div class="form-group">
+            <label for="timeBonus240">Bonus for completing under 240 seconds</label>
+            <input type="number" id="timeBonus240" placeholder="10" min="0" max="100">
+            <div class="help-text">Default: 10 points</div>
+          </div>
+
           <div class="btn-group">
             <button type="submit">🚀 Upload Challenge</button>
             <button type="reset" class="secondary">Clear Form</button>
