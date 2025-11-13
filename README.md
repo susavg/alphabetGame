@@ -1,6 +1,14 @@
 # Word Circle Game (Corporate Edition)
 
-A modern, configurable word circle game for corporate training and team building. Now supports multiple challenges from a single page via a catalog, per-challenge themes/logos/styles, mobile-first sticky input bar, fuzzy matching, and PDF exports.
+A modern, configurable word circle game for corporate training and team building. Now supports multiple challenges from a single page via a catalog, per-challenge themes/logos/styles, mobile-first sticky input bar, fuzzy matching, PDF exports, and **dynamic challenge management via admin dashboard**.
+
+## ✅ What's New (v3 - Admin System)
+
+- **🎛️ Admin Dashboard**: Upload and manage challenges without touching code
+- **☁️ Vercel Blob Storage**: Serverless file storage for dynamic content
+- **📥 Template Downloads**: Get started quickly with pre-built question templates
+- **🔒 Password Protection**: Secure admin access with environment variables
+- **📦 Challenge Export**: Download existing challenges for editing and reuse
 
 ## ✅ What's New (v2)
 
@@ -46,14 +54,29 @@ word-circle-game/
 
 ## 🚀 Quick Start
 
-1. **Download/clone the repo**.
-2. **Keep the structure above** (especially `catalog.json` and the `challenges/` folder).
-3. **Open `index.html` in a browser** (file:// is fine; no build step).
-4. **Pick a challenge via:**
-   - URL param: `index.html?challenge=sales-directors`
-   - or set a path base in `catalog.json` and host at `/game/<slug>`.
+### For Users (Playing the Game)
 
-The app remembers the last challenge in `localStorage` and loads it by default.
+Visit: **https://alphabet-game-umber.vercel.app/**
+
+Pick a challenge via:
+- URL param: `?challenge=sales-directors`
+- The app remembers the last challenge in `localStorage`
+
+### For Admins (Managing Challenges)
+
+1. **Visit the admin panel**: https://alphabet-game-umber.vercel.app/admin.html
+2. **Login** with the admin password (set in Vercel environment variables)
+3. **Download templates** to get started
+4. **Upload your custom challenges** - no coding required!
+
+📖 **Full Setup Guide**: See [SETUP.md](SETUP.md) for detailed deployment instructions.
+
+### For Developers (Local Development)
+
+1. **Clone the repo**
+2. **Install dependencies**: `npm install`
+3. **Run dev server**: `npm run dev`
+4. **Visit**: http://localhost:3000
 
 ---
 

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Alphabet Game</title>
+  <style>
+    :root {
+      --primary: #E30613;
+      --primary-dark: #C10511;
+      --success: #00A651;
+      --danger: #E30613;
+      --warning: #FFA500;
+      --bg: #F5F5F5;
+      --card-bg: #FFFFFF;
+      --text: #333333;
+      --border: #E0E0E0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 2rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      opacity: 0.9;
+    }
+
+    .auth-container {
+      max-width: 400px;
+      margin: 4rem auto;
+      background: var(--card-bg);
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.1);
+    }
+
+    .auth-container h2 {
+      margin-bottom: 1.5rem;
+      color: var(--primary);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border: 1px solid var(--border);
+    }
+
+    .card h2 {
+      color: var(--primary);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="number"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .file-input-wrapper {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    input[type="file"] {
+      padding: 0.5rem;
+      border: 2px dashed var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    input[type="file"]:hover {
+      border-color: var(--primary);
+    }
+
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: var(--primary-dark);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    button.secondary {
+      background: #6c757d;
+    }
+
+    button.secondary:hover {
+      background: #5a6268;
+    }
+
+    button.success {
+      background: var(--success);
+    }
+
+    button.danger {
+      background: var(--danger);
+    }
+
+    button.warning {
+      background: var(--warning);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .alert {
+      padding: 1rem;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      border-left: 4px solid;
+    }
+
+    .alert-success {
+      background: #d4edda;
+      border-color: var(--success);
+      color: #155724;
+    }
+
+    .alert-error {
+      background: #f8d7da;
+      border-color: var(--danger);
+      color: #721c24;
+    }
+
+    .alert-info {
+      background: #d1ecf1;
+      border-color: #0c5460;
+      color: #0c5460;
+    }
+
+    .challenges-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .challenge-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: box-shadow 0.2s;
+    }
+
+    .challenge-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .challenge-card h3 {
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .challenge-card .slug {
+      font-family: monospace;
+      background: var(--bg);
+      padding: 0.25rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.9rem;
+      display: inline-block;
+      margin-bottom: 1rem;
+    }
+
+    .challenge-files {
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+
+    .challenge-files div {
+      padding: 0.25rem 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .challenge-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .challenge-actions button {
+      flex: 1;
+      padding: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .template-section {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+    }
+
+    .template-section h2 {
+      color: white;
+      margin-bottom: 1rem;
+    }
+
+    .template-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .template-buttons button {
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    .template-buttons button:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .help-text {
+      font-size: 0.875rem;
+      color: #6c757d;
+      margin-top: 0.25rem;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-card .number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-card .label {
+      opacity: 0.9;
+      font-size: 0.9rem;
+    }
+
+    .file-preview {
+      background: var(--bg);
+      padding: 1rem;
+      border-radius: 4px;
+      margin-top: 0.5rem;
+      font-family: monospace;
+      font-size: 0.875rem;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .logout-btn {
+      float: right;
+      background: rgba(255,255,255,0.2);
+      padding: 0.5rem 1rem;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    code {
+      background: var(--bg);
+      padding: 0.2rem 0.4rem;
+      border-radius: 3px;
+      font-family: monospace;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Authentication Screen -->
+    <div id="authScreen" class="auth-container">
+      <h2>🔐 Admin Login</h2>
+      <div id="authMessage"></div>
+      <div class="form-group">
+        <label for="adminPassword">Admin Password</label>
+        <input type="password" id="adminPassword" placeholder="Enter admin password" autocomplete="current-password">
+      </div>
+      <button onclick="authenticate()">Login</button>
+    </div>
+
+    <!-- Main Admin Panel -->
+    <div id="adminPanel" class="hidden">
+      <header>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+        <h1>🎮 Alphabet Game - Admin Dashboard</h1>
+        <p>Manage challenges, upload questions, and configure settings</p>
+      </header>
+
+      <!-- Stats -->
+      <div id="statsContainer"></div>
+
+      <!-- Template Download Section -->
+      <div class="template-section">
+        <h2>📥 Download Templates</h2>
+        <p style="margin-bottom: 1rem;">Start by downloading template files to create your own challenges</p>
+        <div class="template-buttons">
+          <button onclick="downloadTemplate('questions')">📄 Download Questions Template</button>
+          <button onclick="downloadTemplate('preview')">📄 Download Preview Template</button>
+          <button onclick="downloadExistingChallenge()">📦 Download Existing Challenge</button>
+        </div>
+      </div>
+
+      <!-- Upload New Challenge -->
+      <div class="card">
+        <h2>⬆️ Upload New Challenge</h2>
+        <div id="uploadMessage"></div>
+
+        <form id="uploadForm">
+          <div class="form-group">
+            <label for="challengeSlug">Challenge Slug (URL identifier) *</label>
+            <input type="text" id="challengeSlug" placeholder="e.g., sales-directors-2025" required pattern="[a-z0-9-]+">
+            <div class="help-text">Use lowercase letters, numbers, and hyphens only</div>
+          </div>
+
+          <div class="form-group">
+            <label for="challengeTitle">Challenge Title *</label>
+            <input type="text" id="challengeTitle" placeholder="e.g., EU Sales Directors Meeting 2025" required>
+          </div>
+
+          <div class="form-group">
+            <label for="challengeSubtitle">Subtitle</label>
+            <input type="text" id="challengeSubtitle" placeholder="e.g., The Alphabet Game">
+          </div>
+
+          <div class="form-group">
+            <label for="questionsFile">Questions File (questions.json) *</label>
+            <input type="file" id="questionsFile" accept=".json" required>
+            <div class="help-text">26 questions (A-Z) with definitions, answers, and hints</div>
+          </div>
+
+          <div class="form-group">
+            <label for="previewFile">Preview File (preview.json)</label>
+            <input type="file" id="previewFile" accept=".json">
+            <div class="help-text">Optional: Simpler questions for preview mode</div>
+          </div>
+
+          <div class="form-group">
+            <label for="logoFile">Logo File</label>
+            <input type="file" id="logoFile" accept="image/*">
+            <div class="help-text">Optional: SVG or PNG logo for the challenge</div>
+          </div>
+
+          <div class="form-group">
+            <label for="timeLimit">Time Limit (seconds)</label>
+            <input type="number" id="timeLimit" placeholder="300" min="60" max="3600">
+            <div class="help-text">Default: 300 seconds (5 minutes)</div>
+          </div>
+
+          <div class="btn-group">
+            <button type="submit">🚀 Upload Challenge</button>
+            <button type="reset" class="secondary">Clear Form</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Existing Challenges -->
+      <div class="card">
+        <h2>📚 Existing Challenges</h2>
+        <button onclick="loadChallenges()" class="secondary" style="margin-bottom: 1rem;">🔄 Refresh List</button>
+        <div id="challengesList">
+          <div class="alert alert-info">Click "Refresh List" to load challenges</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

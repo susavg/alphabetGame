@@ -1,0 +1,516 @@
+{
+  "A": [
+    {
+      "word": "Availability",
+      "definition": "What term describes the state of a product being in stock?",
+      "answers": [
+        "Availability",
+        "availability",
+        "Available",
+        "available",
+        "In stock",
+        "in stock"
+      ],
+      "hints": [
+        "If the shelf is full, this is high.",
+        "Opposite of 'out of stock'.",
+        "Often measured as a percentage on-shelf.",
+        "Starts with A and ends with 'bility'."
+      ]
+    }
+  ],
+  "B": [
+    {
+      "word": "Bigger",
+      "definition": "In our strategy, we aim to make our net sales and GP1…?",
+      "answers": [
+        "Bigger",
+        "bigger",
+        "Better & Bigger",
+        "Better and Bigger",
+        "Better&Bigger",
+        "better & bigger"
+      ],
+      "hints": [
+        "The strategy is about growth, not shrinking.",
+        "Comparative form of the word 'big'.",
+        "Appears on our slides together with 'better'.",
+        "Starts with B and has 6 letters."
+      ]
+    }
+  ],
+  "C": [
+    {
+      "word": "Conversion",
+      "definition": "In what phase in the sales funnel does a customer complete a purchase?",
+      "answers": [
+        "Conversion",
+        "conversion",
+        "Purchase",
+        "purchase"
+      ],
+      "hints": [
+        "It’s the moment when a visitor becomes a buyer.",
+        "A key metric in ecommerce performance.",
+        "Often expressed as a rate or percentage.",
+        "Starts with C and is followed by 'rate' in many dashboards."
+      ]
+    }
+  ],
+  "D": [
+    {
+      "word": "Dashboard",
+      "definition": "In Power BI, data is displayed in a…",
+      "answers": [
+        "Dashboard",
+        "dashboard"
+      ],
+      "hints": [
+        "A visual overview of KPIs and charts.",
+        "You can pin tiles and reports here.",
+        "Named after the control panel in a car.",
+        "Starts with D and ends with 'board'."
+      ]
+    }
+  ],
+  "E": [
+    {
+      "word": "Engagement",
+      "definition": "Which metric refers to the level of interaction users have with content, such as clicks, comments, or shares?",
+      "answers": [
+        "Engagement",
+        "engagement",
+        "User engagement",
+        "user engagement"
+      ],
+      "hints": [
+        "Likes, shares, and comments all contribute to this.",
+        "High values usually mean your content resonates.",
+        "Often tracked on social media and retail media.",
+        "Starts with E and ends with 'ment'."
+      ]
+    }
+  ],
+  "F": [
+    {
+      "word": "Flywheel",
+      "definition": "A framework describing a self-reinforcing loop that drives growth.",
+      "answers": [
+        "Flywheel",
+        "flywheel"
+      ],
+      "hints": [
+        "Popularized by modern growth and marketing models.",
+        "Customer delight feeds momentum in this model.",
+        "Opposite of a linear funnel; it keeps spinning.",
+        "Starts with F and includes the word 'wheel'."
+      ]
+    }
+  ],
+  "G": [
+    {
+      "word": "GP1",
+      "definition": "P&L line before the marketing budget is subtracted.",
+      "answers": [
+        "GP1",
+        "gp1",
+        "Gross Profit 1",
+        "Gross Profit",
+        "gross profit"
+      ],
+      "hints": [
+        "It comes after net sales, before marketing expenses.",
+        "A key measure of product profitability.",
+        "Shown as the first gross profit line in P&L.",
+        "Starts with G and is often written with a '1'."
+      ]
+    }
+  ],
+  "H": [
+    {
+      "word": "Heatmap",
+      "definition": "Visual representation of user behavior on a webpage by showing where people click, scroll, or hover most.",
+      "answers": [
+        "Heatmap",
+        "heatmap",
+        "Heat map",
+        "heat map"
+      ],
+      "hints": [
+        "Hotter colors usually mean more activity.",
+        "Used to optimize layout, buttons and CTAs.",
+        "Helps you see what parts of a page attract attention.",
+        "Starts with H and contains the word 'heat'."
+      ]
+    }
+  ],
+  "I": [
+    {
+      "word": "Innopack",
+      "definition": "Platform used for product innovation.",
+      "answers": [
+        "Innopack",
+        "innopack",
+        "Innopak",
+        "innopak"
+      ],
+      "hints": [
+        "Internal platform supporting innovative ideas for packs and products.",
+        "Name combines 'innovation' and 'packaging'.",
+        "Used to collaborate on new concepts.",
+        "Starts with I and ends with 'pack'."
+      ]
+    }
+  ],
+  "J": [
+    {
+      "word": "Journey",
+      "definition": "Term for the complete path a consumer follows across multiple touchpoints, from first awareness to purchase.",
+      "answers": [
+        "Journey",
+        "journey",
+        "Customer journey",
+        "customer journey"
+      ],
+      "hints": [
+        "Covers all steps from awareness to loyalty.",
+        "Includes online and offline touchpoints.",
+        "Mapped to understand friction and opportunities.",
+        "Starts with J and often follows the word 'customer'."
+      ]
+    }
+  ],
+  "K": [
+    {
+      "word": "Keywords",
+      "definition": "Specific words or phrases users type into search engines to find content or products.",
+      "answers": [
+        "Keyword",
+        "keyword",
+        "Keywords",
+        "keywords",
+        "Search terms",
+        "search terms"
+      ],
+      "hints": [
+        "Critical for SEO and marketplace search.",
+        "You bid on these in paid search campaigns.",
+        "Choosing the right ones boosts visibility.",
+        "Starts with K and ends with 'words'."
+      ]
+    }
+  ],
+  "L": [
+    {
+      "word": "Lead",
+      "definition": "Term for a contact who has shown interest in a product or service and shared their information, but has not yet purchased.",
+      "answers": [
+        "Lead",
+        "lead",
+        "Sales lead",
+        "sales lead"
+      ],
+      "hints": [
+        "Marketing and sales teams work together to qualify this.",
+        "Can be warm, cold, or hot.",
+        "You hope to convert this into a customer.",
+        "Four letters, starts with L."
+      ]
+    }
+  ],
+  "M": [
+    {
+      "word": "MSL",
+      "definition": "Abbreviation which refers to the set of essential products that should always be available on shelves.",
+      "answers": [
+        "MSL",
+        "msl",
+        "Must Stock List",
+        "must stock list"
+      ],
+      "hints": [
+        "Defines the core items that must not be missing.",
+        "Used by sales reps and category managers.",
+        "Ensures shoppers always find key products.",
+        "Three-letter acronym starting with M."
+      ]
+    },
+    {
+      "word": "Margin",
+      "definition": "The expected profit from a sale.",
+      "answers": [
+        "Margin",
+        "margin",
+        "Profit margin",
+        "profit margin"
+      ],
+      "hints": [
+        "Difference between selling price and cost.",
+        "Can be expressed in % or in currency.",
+        "You always want this to be healthy, not zero.",
+        "Six letters and starts with M."
+      ]
+    }
+  ],
+  "N": [
+    {
+      "word": "Navigation",
+      "definition": "To find information and products one can use the search bar or the…",
+      "answers": [
+        "Navigation",
+        "navigation",
+        "Menu",
+        "menu"
+      ],
+      "hints": [
+        "Often appears as a bar or menu at the top of a site.",
+        "Good design here helps users find categories quickly.",
+        "Breadcrumbs and menus are part of this.",
+        "Starts with N and is key to user experience."
+      ]
+    }
+  ],
+  "O": [
+    {
+      "word": "Omnichannel",
+      "definition": "What strategy integrates multiple sales and communication channels into one seamless customer experience?",
+      "answers": [
+        "Omnichannel",
+        "omnichannel",
+        "Omni-channel",
+        "omni-channel"
+      ],
+      "hints": [
+        "Bridges online and offline shopping journeys.",
+        "Customer should feel it’s one brand, not many channels.",
+        "Click & collect is part of this strategy.",
+        "Starts with O and contains the word 'channel'."
+      ]
+    }
+  ],
+  "P": [
+    {
+      "word": "Pureplayer",
+      "definition": "Amazon, bol.com, Rohlik and Allegro are…",
+      "answers": [
+        "Pureplayer",
+        "pureplayer",
+        "Pure player",
+        "pure player",
+        "Online pure player",
+        "online pure player"
+      ],
+      "hints": [
+        "They operate only online, not with physical stores.",
+        "Often marketplaces or quick-commerce platforms.",
+        "Opposite of 'brick-and-mortar' retailers.",
+        "Starts with P and includes the word 'player'."
+      ]
+    }
+  ],
+  "Q": [
+    {
+      "word": "Quick Commerce",
+      "definition": "Wolt, Getir, Zapp, Glovo are offering …. commerce.",
+      "answers": [
+        "Quick Commerce",
+        "quick commerce",
+        "Quick-commerce",
+        "q-commerce",
+        "Q-commerce"
+      ],
+      "hints": [
+        "Promises delivery in minutes, not days.",
+        "Often focused on convenience baskets and top-up trips.",
+        "Uses dark stores or local hubs for speed.",
+        "Two words: first starts with Q, second with C."
+      ]
+    },
+    {
+      "word": "Quality",
+      "definition": "A measure of product excellence.",
+      "answers": [
+        "Quality",
+        "quality"
+      ],
+      "hints": [
+        "Customers notice this in performance and reliability.",
+        "QA and QC teams test and monitor it.",
+        "We always aim to increase this, not reduce it.",
+        "Starts with Q and ends with Y."
+      ]
+    }
+  ],
+  "R": [
+    {
+      "word": "Reach",
+      "definition": "Metric in Retail Media indicating how many unique users or households were exposed to a campaign's ads.",
+      "answers": [
+        "Reach",
+        "reach"
+      ],
+      "hints": [
+        "Different from frequency, which counts repetitions.",
+        "Higher values mean more people saw the campaign at least once.",
+        "Often shown together with impressions and GRPs.",
+        "Five letters and starts with R."
+      ]
+    }
+  ],
+  "S": [
+    {
+      "word": "Search Engine Optimization",
+      "definition": "What practice focuses on improving a website’s or product's visibility in organic search results?",
+      "answers": [
+        "Search Engine Optimization",
+        "search engine optimization",
+        "SEO",
+        "seo"
+      ],
+      "hints": [
+        "Helps you rank higher without paying for each click.",
+        "Works with keywords, content, and technical improvements.",
+        "Three-letter acronym is very well known to marketers.",
+        "Full term starts with S, E, and O."
+      ]
+    }
+  ],
+  "T": [
+    {
+      "word": "Traffic",
+      "definition": "What term refers to the number of visitors a website receives over a given period?",
+      "answers": [
+        "Traffic",
+        "traffic",
+        "Website traffic",
+        "website traffic"
+      ],
+      "hints": [
+        "You usually want more of this, as long as it’s relevant.",
+        "Can be organic, paid, or direct.",
+        "Analytics tools track this for sites.",
+        "Also a word for cars on the road."
+      ]
+    }
+  ],
+  "U": [
+    {
+      "word": "UX",
+      "definition": "Abbreviation for the overall experience and satisfaction a user has when interacting with a website, app, or any other digital touchpoint.",
+      "answers": [
+        "UX",
+        "ux",
+        "User experience",
+        "user experience"
+      ],
+      "hints": [
+        "Closely linked to usability and design.",
+        "Good versions of this make products easy and enjoyable to use.",
+        "Often paired with UI in digital projects.",
+        "Two-letter acronym: first letter is U."
+      ]
+    }
+  ],
+  "V": [
+    {
+      "word": "Visibility",
+      "definition": "Term for how easily a product can be discovered in online and offline stores.",
+      "answers": [
+        "Visibility",
+        "visibility"
+      ],
+      "hints": [
+        "If shoppers can’t see it, they can’t buy it.",
+        "Planograms and search rankings both affect this.",
+        "Share-of-shelf and share-of-search link to it.",
+        "Starts with V and ends with 'bility'."
+      ]
+    }
+  ],
+  "W": [
+    {
+      "word": "WeGrow",
+      "definition": "Platform used to share eCommerce Best Practices.",
+      "answers": [
+        "WeGrow",
+        "wegrow",
+        "Wegrow"
+      ],
+      "hints": [
+        "Internal platform for learning and best-practice sharing.",
+        "Name combines 'we' and a verb about getting bigger.",
+        "Focuses strongly on eCommerce capabilities.",
+        "Starts with W and ends with 'grow'."
+      ]
+    }
+  ],
+  "X": [
+    {
+      "word": "Excellence",
+      "definition": "(Contains X) What standard of quality do we strive for in everything we do?",
+      "answers": [
+        "Excellence",
+        "excellence"
+      ],
+      "hints": [
+        "Goes beyond 'good' and even beyond 'very good'.",
+        "Often paired with 'operational' or 'commercial'.",
+        "Contains the letter X near the beginning.",
+        "Ten letters, starts with E."
+      ]
+    }
+  ],
+  "Y": [
+    {
+      "word": "YTD",
+      "definition": "Acronym referring to data covering beginning of the year to the current date.",
+      "answers": [
+        "YTD",
+        "ytd",
+        "Year to date",
+        "year to date"
+      ],
+      "hints": [
+        "Often compared with last year’s same period.",
+        "Used in financial and performance dashboards.",
+        "Stands for 'Year To Date'.",
+        "Three-letter acronym starting with Y."
+      ]
+    }
+  ],
+  "Z": [
+    {
+      "word": "UserZoom",
+      "definition": "(Contains Z) Tool found in the Collaboration Toolbox to generate consumer feedback.",
+      "answers": [
+        "UserZoom",
+        "userzoom",
+        "Userzoom"
+      ],
+      "hints": [
+        "Used for user testing and consumer insights.",
+        "Lets you collect feedback on websites or concepts.",
+        "Name starts with 'User' and includes the idea of 'zooming in'.",
+        "Contains the letter Z in the middle."
+      ]
+    },
+    {
+      "word": "Zero-based budgeting",
+      "definition": "The approach that requires justifying each decision or budget line individually, rather than basing it on the previous period.",
+      "answers": [
+        "Zero-based budgeting",
+        "Zero based budgeting",
+        "Zero-based budget",
+        "Zero based budget",
+        "Zero-based",
+        "Zero based"
+      ],
+      "hints": [
+        "Every period starts from a 'clean slate'.",
+        "Nothing is automatically carried over from last year.",
+        "Often abbreviated as ZBB.",
+        "Starts with Z and ends with 'budgeting'."
+      ]
+    }
+  ]
+}

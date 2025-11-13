@@ -1,0 +1,16 @@
+{
+  "name": "alphabet-game",
+  "version": "1.0.0",
+  "description": "Interactive alphabet game with dynamic challenge management",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel"
+  },
+  "dependencies": {
+    "@vercel/blob": "^0.23.0",
+    "formidable": "^3.5.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
