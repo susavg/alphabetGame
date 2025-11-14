@@ -574,6 +574,10 @@ showHintToast(text){
         if(letters[idx]) letters[idx].classList.add('passed');
       }
 
+      // Clear input field after passing
+      const inputEl = document.getElementById('answer');
+      if(inputEl) inputEl.value = '';
+
       // DO NOT focus the input here (prevents keyboard popping on PASS)
       this.currentIndex=(this.currentIndex+1) % this.remainingWords.length;
       this.updateGame();
