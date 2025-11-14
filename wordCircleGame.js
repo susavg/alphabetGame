@@ -514,15 +514,36 @@ showHintToast(text){
   }
 
   checkAnswer(){
-    if(this.remainingWords.length===0 || this.gameEnded){ this.endGame(); return; }
+    console.log('=== checkAnswer START ===');
+    console.log('remainingWords.length:', this.remainingWords.length);
+    console.log('gameEnded:', this.gameEnded);
+
+    if(this.remainingWords.length===0 || this.gameEnded){
+      console.log('Ending game early');
+      this.endGame();
+      return;
+    }
+
     const inputEl=document.getElementById('answer');
-    const val=inputEl.value.trim(); if(!val) return;
+    const val=inputEl.value.trim();
+    console.log('Input value:', val);
+
+    if(!val){
+      console.log('No value, returning');
+      return;
+    }
 
     // Ensure currentIndex is valid
     if(this.currentIndex >= this.remainingWords.length) this.currentIndex = 0;
+    console.log('currentIndex:', this.currentIndex);
 
     const cur=this.remainingWords[this.currentIndex];
-    if(!cur){ console.error('No current word at index', this.currentIndex); return; }
+    console.log('Current word:', cur);
+
+    if(!cur){
+      console.error('No current word at index', this.currentIndex);
+      return;
+    }
 
     const letter=cur.letter;
     const idx=this.words.findIndex(w=>w.letter===letter);
