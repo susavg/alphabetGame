@@ -170,9 +170,9 @@ showHintToast(text){
       logoPath, centerLogoPath:centerLogo, stylesPath, basePath: ch.basePath
     };
 
-    // questions/preview
-    const qPath = withBase(ch.basePath, ch.questionsPath || 'questions.json');
-    const pPath = ch.previewPath ? withBase(ch.basePath, ch.previewPath) : qPath;
+    // questions/preview - use blob storage URLs directly if available
+    const qPath = ch.questionsPath || withBase(ch.basePath, 'questions.json');
+    const pPath = ch.previewPath || qPath;
 
     this.allWords    = await fetchJSON(qPath);
     this.previewWords= await fetchJSON(pPath);
