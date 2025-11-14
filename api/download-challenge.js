@@ -75,23 +75,42 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: 'No files found for this challenge' });
     }
 
-    // Create simple ZIP structure (minimal implementation)
-    // For a proper ZIP, we'd use a library like 'jszip', but for simplicity
-    // we'll return JSON with both files
-    const zipData = {
-      challenge: slug,
-      title: challenge.title,
-      files: {
-        'questions.json': files.questions,
-        'preview.json': files.preview
+    // Parse questions to extract structured data for editor
+    let questionsData = {};
+    if (files.questions) {
+      try {
+        const parsed = JSON.parse(files.questions);
+        questionsData = parsed;
+      } catch (error) {
+        console.error('Error parsing questions:', error);
       }
+    }
+
+    // Transform to editor-friendly format
+    const editorData = {
+      slug,
+      title: challenge.title,
+      subtitle: challenge.subtitle || 'The Alphabet Game',
+      questions: {}
     };
 
-    // Set headers for download
-    res.setHeader('Content-Type', 'application/json');
-    res.setHeader('Content-Disposition', `attachment; filename="${slug}.json"`);
+    // Convert each letter's questions to simple format
+    Object.keys(questionsData).forEach(letter => {
+      const letterQuestions = questionsData[letter];
+      if (Array.isArray(letterQuestions) && letterQuestions.length > 0) {
+        const firstQuestion = letterQuestions[0];
 
-    return res.status(200).json(zipData);
+        editorData.questions[letter] = {
+          definition: firstQuestion.definition || '',
+          // Take first answer from array, or single answer string
+          answer: Array.isArray(firstQuestion.answers) ? firstQuestion.answers[0] : (firstQuestion.answer || ''),
+          // Take first hint from array, or single hint string
+          hint: Array.isArray(firstQuestion.hints) ? firstQuestion.hints[0] : (firstQuestion.hint || '')
+        };
+      }
+    });
+
+    return res.status(200).json(editorData);
   } catch (error) {
     console.error('Download error:', error);
     return res.status(500).json({ error: error.message });
