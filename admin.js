@@ -428,6 +428,7 @@ async function downloadChallenge(slug) {
 
 // Challenge Editor Functions
 let currentEditingChallenge = null;
+let currentEditorView = 'form'; // 'form' or 'json'
 
 function openChallengeEditor(slug = null) {
   currentEditingChallenge = slug;
@@ -445,12 +446,108 @@ function openChallengeEditor(slug = null) {
     renderQuestionsEditor({});
   }
 
+  // Reset to form view
+  switchEditorView('form');
   modal.style.display = 'block';
 }
 
 function closeChallengeEditor() {
   document.getElementById('challengeEditorModal').style.display = 'none';
   currentEditingChallenge = null;
+}
+
+function switchEditorView(view) {
+  currentEditorView = view;
+  const formView = document.getElementById('formViewContainer');
+  const jsonView = document.getElementById('jsonViewContainer');
+  const formBtn = document.getElementById('formViewBtn');
+  const jsonBtn = document.getElementById('jsonViewBtn');
+
+  if (view === 'form') {
+    // Switch to form view
+    formView.style.display = 'block';
+    jsonView.style.display = 'none';
+    formBtn.style.background = '#E30613';
+    jsonBtn.style.background = '#6c757d';
+
+    // Sync from JSON to form if JSON was edited
+    try {
+      const jsonContent = document.getElementById('jsonEditor').value;
+      if (jsonContent.trim()) {
+        const data = JSON.parse(jsonContent);
+        syncJsonToForm(data);
+      }
+    } catch (e) {
+      // Invalid JSON, keep form as is
+      console.log('Invalid JSON, keeping form data');
+    }
+  } else {
+    // Switch to JSON view
+    formView.style.display = 'none';
+    jsonView.style.display = 'block';
+    formBtn.style.background = '#6c757d';
+    jsonBtn.style.background = '#E30613';
+
+    // Sync from form to JSON
+    const formData = collectFormData();
+    document.getElementById('jsonEditor').value = JSON.stringify(formData, null, 2);
+  }
+}
+
+function collectFormData() {
+  const title = document.getElementById('editorTitle').value.trim();
+  const subtitle = document.getElementById('editorSubtitle').value.trim();
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  const questions = {};
+
+  for (const letter of letters) {
+    const questionEl = document.getElementById(`question_${letter}`);
+    const answerEl = document.getElementById(`answer_${letter}`);
+    const hintEl = document.getElementById(`hint_${letter}`);
+
+    if (questionEl && answerEl) {
+      const question = questionEl.value.trim();
+      const answer = answerEl.value.trim();
+      const hint = hintEl ? hintEl.value.trim() : '';
+
+      if (question || answer) {
+        questions[letter] = {
+          definition: question,
+          answers: answer ? answer.split(',').map(a => a.trim()).filter(a => a) : [],
+          hints: hint ? hint.split('|').map(h => h.trim()).filter(h => h) : []
+        };
+      }
+    }
+  }
+
+  return { title, subtitle, questions };
+}
+
+function syncJsonToForm(data) {
+  if (data.title) document.getElementById('editorTitle').value = data.title;
+  if (data.subtitle) document.getElementById('editorSubtitle').value = data.subtitle;
+
+  if (data.questions) {
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    for (const letter of letters) {
+      const q = data.questions[letter];
+      if (q) {
+        const questionEl = document.getElementById(`question_${letter}`);
+        const answerEl = document.getElementById(`answer_${letter}`);
+        const hintEl = document.getElementById(`hint_${letter}`);
+
+        if (questionEl) questionEl.value = q.definition || '';
+        if (answerEl) {
+          const answers = Array.isArray(q.answers) ? q.answers.join(', ') : (q.answer || '');
+          answerEl.value = answers;
+        }
+        if (hintEl) {
+          const hints = Array.isArray(q.hints) ? q.hints.join(' | ') : (q.hint || '');
+          hintEl.value = hints;
+        }
+      }
+    }
+  }
 }
 
 function renderQuestionsEditor(questionsData = {}) {
@@ -529,44 +626,77 @@ document.getElementById('challengeEditorForm')?.addEventListener('submit', async
 });
 
 async function saveChallengeFromEditor() {
-  let slug = document.getElementById('editorSlug').value.trim().toLowerCase();
-  const title = document.getElementById('editorTitle').value.trim();
-  const subtitle = document.getElementById('editorSubtitle').value.trim();
+  let title, subtitle, questionsData;
 
+  // Determine which view we're in and collect data accordingly
+  if (currentEditorView === 'json') {
+    // Parse JSON editor
+    try {
+      const jsonContent = document.getElementById('jsonEditor').value;
+      const data = JSON.parse(jsonContent);
+
+      title = data.title;
+      subtitle = data.subtitle || '';
+
+      // Transform JSON format to internal format
+      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+      questionsData = {};
+
+      for (const letter of letters) {
+        const q = data.questions?.[letter];
+        if (q) {
+          questionsData[letter] = [{
+            definition: q.definition || '',
+            answers: Array.isArray(q.answers) ? q.answers : [q.answer || ''],
+            ...(q.hints && q.hints.length > 0 && { hints: Array.isArray(q.hints) ? q.hints : [q.hint] })
+          }];
+        }
+      }
+    } catch (e) {
+      showEditorMessage('Invalid JSON format: ' + e.message, 'error');
+      return;
+    }
+  } else {
+    // Collect from form view
+    title = document.getElementById('editorTitle').value.trim();
+    subtitle = document.getElementById('editorSubtitle').value.trim();
+
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    questionsData = {};
+
+    for (const letter of letters) {
+      const question = document.getElementById(`question_${letter}`).value.trim();
+      const answer = document.getElementById(`answer_${letter}`).value.trim();
+      const hint = document.getElementById(`hint_${letter}`).value.trim();
+
+      if (!question || !answer) {
+        showEditorMessage(`Please fill in question and answer for letter ${letter}`, 'error');
+        return;
+      }
+
+      // Split answers by comma, hints by pipe
+      const answers = answer.split(',').map(a => a.trim()).filter(a => a);
+      const hints = hint ? hint.split('|').map(h => h.trim()).filter(h => h) : [];
+
+      questionsData[letter] = [{
+        definition: question,
+        answers: answers,
+        ...(hints.length > 0 && { hints: hints })
+      }];
+    }
+  }
+
+  // Validate title
   if (!title) {
     showEditorMessage('Please fill in the challenge title', 'error');
     return;
   }
 
   // Auto-generate slug from title if creating new challenge
+  let slug = document.getElementById('editorSlug').value.trim().toLowerCase();
   if (!slug || !currentEditingChallenge) {
     slug = generateSlug(title);
     document.getElementById('editorSlug').value = slug;
-  }
-
-  // Collect all questions
-  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-  const questionsData = {};
-
-  for (const letter of letters) {
-    const question = document.getElementById(`question_${letter}`).value.trim();
-    const answer = document.getElementById(`answer_${letter}`).value.trim();
-    const hint = document.getElementById(`hint_${letter}`).value.trim();
-
-    if (!question || !answer) {
-      showEditorMessage(`Please fill in question and answer for letter ${letter}`, 'error');
-      return;
-    }
-
-    // Split answers by comma, hints by pipe
-    const answers = answer.split(',').map(a => a.trim()).filter(a => a);
-    const hints = hint ? hint.split('|').map(h => h.trim()).filter(h => h) : [];
-
-    questionsData[letter] = [{
-      definition: question,
-      answers: answers,
-      ...(hints.length > 0 && { hints: hints })
-    }];
   }
 
   // Create FormData for upload
