@@ -539,6 +539,206 @@ async function downloadChallenge(slug) {
   }
 }
 
+// Challenge Editor Functions
+let currentEditingChallenge = null;
+
+function openChallengeEditor(slug = null) {
+  currentEditingChallenge = slug;
+  const modal = document.getElementById('challengeEditorModal');
+  const title = document.getElementById('editorTitle');
+  const questionsEditor = document.getElementById('questionsEditor');
+
+  if (slug) {
+    title.textContent = 'Edit Challenge';
+    loadChallengeForEditing(slug);
+  } else {
+    title.textContent = 'Create New Challenge';
+    document.getElementById('editorSlug').value = '';
+    document.getElementById('editorTitle').value = '';
+    document.getElementById('editorSubtitle').value = '';
+    renderQuestionsEditor({});
+  }
+
+  modal.style.display = 'block';
+}
+
+function closeChallengeEditor() {
+  document.getElementById('challengeEditorModal').style.display = 'none';
+  currentEditingChallenge = null;
+}
+
+function renderQuestionsEditor(questionsData = {}) {
+  const container = document.getElementById('questionsEditor');
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+  const html = letters.map(letter => {
+    const letterData = questionsData[letter] || [{ definition: '', answer: '', hint: '' }];
+    const firstQuestion = letterData[0] || { definition: '', answer: '', hint: '' };
+
+    return `
+      <div style="background: #f5f5f5; padding: 1rem; margin-bottom: 1rem; border-radius: 4px; border-left: 4px solid #E30613;">
+        <h4 style="margin: 0 0 0.75rem; color: #E30613;">Letter ${letter}</h4>
+        <div style="display: grid; gap: 0.75rem;">
+          <div>
+            <label style="font-size: 0.875rem; font-weight: 500;">Question/Definition *</label>
+            <textarea id="question_${letter}" rows="2" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; font-family: inherit;" placeholder="e.g., European country starting with ${letter}">${firstQuestion.definition || ''}</textarea>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div>
+              <label style="font-size: 0.875rem; font-weight: 500;">Answer *</label>
+              <input type="text" id="answer_${letter}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;" placeholder="e.g., Austria" value="${firstQuestion.answer || ''}">
+            </div>
+            <div>
+              <label style="font-size: 0.875rem; font-weight: 500;">Hint (optional)</label>
+              <input type="text" id="hint_${letter}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;" placeholder="e.g., Alpine country" value="${firstQuestion.hint || ''}">
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  container.innerHTML = html;
+}
+
+async function loadChallengeForEditing(slug) {
+  try {
+    const response = await fetch(`${API_BASE}/api/download-challenge?slug=${slug}`);
+    if (!response.ok) throw new Error('Failed to load challenge');
+
+    const data = await response.json();
+
+    document.getElementById('editorSlug').value = slug;
+    document.getElementById('editorSlug').readOnly = true;
+    document.getElementById('editorTitle').value = data.title || '';
+    document.getElementById('editorSubtitle').value = data.subtitle || '';
+
+    const questionsData = data.files?.questions ? JSON.parse(data.files.questions) : {};
+    renderQuestionsEditor(questionsData);
+  } catch (error) {
+    console.error('Error loading challenge:', error);
+    showEditorMessage('Error loading challenge: ' + error.message, 'error');
+  }
+}
+
+function showEditorMessage(message, type) {
+  const container = document.getElementById('editorMessage');
+  container.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+  setTimeout(() => {
+    container.innerHTML = '';
+  }, 5000);
+}
+
+// Handle editor form submission
+document.getElementById('challengeEditorForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  await saveChallengeFromEditor();
+});
+
+async function saveChallengeFromEditor() {
+  const slug = document.getElementById('editorSlug').value.trim().toLowerCase();
+  const title = document.getElementById('editorTitle').value.trim();
+  const subtitle = document.getElementById('editorSubtitle').value.trim();
+
+  if (!slug || !title) {
+    showEditorMessage('Please fill in required fields', 'error');
+    return;
+  }
+
+  // Collect all questions
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+  const questionsData = {};
+
+  for (const letter of letters) {
+    const question = document.getElementById(`question_${letter}`).value.trim();
+    const answer = document.getElementById(`answer_${letter}`).value.trim();
+    const hint = document.getElementById(`hint_${letter}`).value.trim();
+
+    if (!question || !answer) {
+      showEditorMessage(`Please fill in question and answer for letter ${letter}`, 'error');
+      return;
+    }
+
+    questionsData[letter] = [{
+      definition: question,
+      answer: answer,
+      ...(hint && { hint: hint })
+    }];
+  }
+
+  // Create FormData for upload
+  const formData = new FormData();
+  formData.append('slug', slug);
+
+  const config = {
+    title,
+    subtitle: subtitle || 'The Alphabet Game'
+  };
+  formData.append('config', JSON.stringify(config));
+
+  // Convert questions to JSON blob
+  const questionsBlob = new Blob([JSON.stringify(questionsData, null, 2)], { type: 'application/json' });
+  formData.append('questions', questionsBlob, 'questions.json');
+
+  try {
+    showEditorMessage('Saving challenge... <span class="loading"></span>', 'info');
+
+    const response = await fetch(`${API_BASE}/api/upload-challenge`, {
+      method: 'POST',
+      headers: {
+        'x-admin-password': adminPassword
+      },
+      body: formData
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      showEditorMessage('✅ Challenge saved successfully!', 'success');
+      setTimeout(() => {
+        closeChallengeEditor();
+        loadExistingChallenges();
+      }, 1500);
+    } else {
+      showEditorMessage('❌ Error: ' + result.error, 'error');
+    }
+  } catch (error) {
+    console.error('Save error:', error);
+    showEditorMessage('❌ Error: ' + error.message, 'error');
+  }
+}
+
+// Load existing challenges with edit buttons
+async function loadExistingChallenges() {
+  try {
+    const response = await fetch(`${API_BASE}/catalog.json`);
+    if (!response.ok) throw new Error('Failed to load catalog');
+
+    const catalog = await response.json();
+    const container = document.getElementById('existingChallengesButtons');
+
+    if (!catalog.challenges || Object.keys(catalog.challenges).length === 0) {
+      container.innerHTML = '<p style="opacity: 0.6;">No challenges yet. Create your first one!</p>';
+      return;
+    }
+
+    const buttons = Object.entries(catalog.challenges).map(([slug, config]) => {
+      return `
+        <button type="button" onclick="openChallengeEditor('${slug}')" style="width: 100%; padding: 1rem; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); color: white; border: none; border-radius: 4px; font-weight: 500; cursor: pointer; transition: background 0.2s; text-align: left;">
+          <div style="font-size: 1.1rem; margin-bottom: 0.25rem;">✏️ ${config.title || slug}</div>
+          <div style="font-size: 0.85rem; opacity: 0.8;">Click to edit questions</div>
+        </button>
+      `;
+    }).join('');
+
+    container.innerHTML = buttons;
+  } catch (error) {
+    console.error('Error loading challenges:', error);
+    document.getElementById('existingChallengesButtons').innerHTML =
+      '<p style="color: #E30613;">Error loading challenges. Please refresh the page.</p>';
+  }
+}
+
 // Load active challenge form on page load
 window.addEventListener('DOMContentLoaded', () => {
   const savedPassword = localStorage.getItem('adminPassword');
@@ -547,6 +747,7 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('authScreen').classList.add('hidden');
     document.getElementById('adminPanel').classList.remove('hidden');
     loadActiveChallengeForm();
-    loadDownloadButtons();
+    loadExistingChallenges();
+    renderQuestionsEditor(); // Initialize empty editor
   }
 });
