@@ -516,11 +516,13 @@ showHintToast(text){
     this.userAnswers[letter]=val;
 
     const ok = checkAnswer(val, cur.answers, this.config.gameSettings.fuzzyMatching);
-    letters[idx].classList.remove('passed');
+
+    // Remove ALL previous state classes before applying new state
+    letters[idx].classList.remove('current', 'passed', 'correct', 'incorrect');
 
     if(ok){
       playSound('correct'); showFeedback(true, letters[idx]);
-      letters[idx].classList.remove('current'); letters[idx].classList.add('correct');
+      letters[idx].classList.add('correct');
       this.correctAnswers++; this.answeredWords[idx]=true;
       if(!this.isPreviewMode){ this.correctPoints += this.config.gameSettings.scoring.correct; this.totalPoints += this.config.gameSettings.scoring.correct; }
     }else{
@@ -532,7 +534,7 @@ showHintToast(text){
         if(wasClose){ const el=document.getElementById('fuzzyHint'); if(el){ el.style.display='block'; setTimeout(()=>el.style.display='none',3000); } }
       }
       playSound('incorrect'); showFeedback(false, letters[idx]);
-      letters[idx].classList.remove('current'); letters[idx].classList.add('incorrect');
+      letters[idx].classList.add('incorrect');
       this.incorrectAnswers++; this.answeredWords[idx]=false;
       if(!this.isPreviewMode){ this.incorrectPoints += this.config.gameSettings.scoring.incorrect; this.totalPoints += this.config.gameSettings.scoring.incorrect; }
     }

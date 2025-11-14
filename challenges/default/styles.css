@@ -122,6 +122,8 @@ button:active{ transform: translateY(0); }
 button:disabled{ opacity:.55; cursor:not-allowed; box-shadow:none; }
 .btn-pass{ background: linear-gradient(135deg, var(--warning), #e67300); }
 
+/* Submit button should be green (success color) */
+#btnSubmit{ background: linear-gradient(135deg, var(--correct), color-mix(in srgb, var(--correct) 80%, #000)); }
 
 .hint-icon{
   flex:0 0 auto;
