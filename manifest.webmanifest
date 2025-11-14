@@ -1,0 +1,21 @@
+{
+  "name": "Word Circle Game",
+  "short_name": "Word Circle",
+  "description": "Interactive alphabet game with dynamic challenge management",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5F5F5",
+  "theme_color": "#E30613",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
