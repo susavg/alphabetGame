@@ -100,12 +100,25 @@ export default async function handler(req, res) {
       if (Array.isArray(letterQuestions) && letterQuestions.length > 0) {
         const firstQuestion = letterQuestions[0];
 
+        // Join arrays for editing: answers with comma, hints with pipe
+        let answerValue = '';
+        if (Array.isArray(firstQuestion.answers)) {
+          answerValue = firstQuestion.answers.join(', ');
+        } else if (firstQuestion.answer) {
+          answerValue = firstQuestion.answer;
+        }
+
+        let hintValue = '';
+        if (Array.isArray(firstQuestion.hints)) {
+          hintValue = firstQuestion.hints.join(' | ');
+        } else if (firstQuestion.hint) {
+          hintValue = firstQuestion.hint;
+        }
+
         editorData.questions[letter] = {
           definition: firstQuestion.definition || '',
-          // Take first answer from array, or single answer string
-          answer: Array.isArray(firstQuestion.answers) ? firstQuestion.answers[0] : (firstQuestion.answer || ''),
-          // Take first hint from array, or single hint string
-          hint: Array.isArray(firstQuestion.hints) ? firstQuestion.hints[0] : (firstQuestion.hint || '')
+          answer: answerValue,
+          hint: hintValue
         };
       }
     });

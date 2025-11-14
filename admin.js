@@ -432,13 +432,13 @@ let currentEditingChallenge = null;
 function openChallengeEditor(slug = null) {
   currentEditingChallenge = slug;
   const modal = document.getElementById('challengeEditorModal');
-  const title = document.getElementById('editorTitle');
+  const modalTitle = document.getElementById('editorModalTitle');
 
   if (slug) {
-    title.textContent = 'Edit Challenge';
+    modalTitle.textContent = 'Edit Challenge';
     loadChallengeForEditing(slug);
   } else {
-    title.textContent = 'Create New Challenge';
+    modalTitle.textContent = 'Create New Challenge';
     document.getElementById('editorSlug').value = '';
     document.getElementById('editorTitle').value = '';
     document.getElementById('editorSubtitle').value = '';
@@ -476,15 +476,15 @@ function renderQuestionsEditor(questionsData = {}) {
             <label style="font-size: 0.875rem; font-weight: 500;">Question/Definition *</label>
             <textarea id="question_${letter}" rows="2" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; font-family: inherit;" placeholder="e.g., European country starting with ${letter}">${escapeHtml(question.definition)}</textarea>
           </div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
-            <div>
-              <label style="font-size: 0.875rem; font-weight: 500;">Answer *</label>
-              <input type="text" id="answer_${letter}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;" placeholder="e.g., Austria" value="${escapeHtml(question.answer)}">
-            </div>
-            <div>
-              <label style="font-size: 0.875rem; font-weight: 500;">Hint (optional)</label>
-              <input type="text" id="hint_${letter}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;" placeholder="e.g., Alpine country" value="${escapeHtml(question.hint)}">
-            </div>
+          <div>
+            <label style="font-size: 0.875rem; font-weight: 500;">Answers * (comma-separated for multiple)</label>
+            <input type="text" id="answer_${letter}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;" placeholder="e.g., Austria, austria, Österreich" value="${escapeHtml(question.answer)}">
+            <div style="font-size: 0.75rem; opacity: 0.7; margin-top: 0.25rem;">💡 Separate multiple accepted answers with <strong>commas</strong> (e.g., Austria, austria, Österreich)</div>
+          </div>
+          <div>
+            <label style="font-size: 0.875rem; font-weight: 500;">Hints (optional, pipe-separated for multiple)</label>
+            <textarea id="hint_${letter}" rows="3" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; font-family: inherit;" placeholder="e.g., It's an Alpine country with mountains | The capital is Vienna, a beautiful city | Known for Mozart and Strauss">${escapeHtml(question.hint)}</textarea>
+            <div style="font-size: 0.75rem; opacity: 0.7; margin-top: 0.25rem;">💡 Separate multiple hints with <strong>pipe |</strong> character. Each hint will be shown one at a time in the game when players request help.</div>
           </div>
         </div>
       </div>
@@ -552,10 +552,14 @@ async function saveChallengeFromEditor() {
       return;
     }
 
+    // Split answers by comma, hints by pipe
+    const answers = answer.split(',').map(a => a.trim()).filter(a => a);
+    const hints = hint ? hint.split('|').map(h => h.trim()).filter(h => h) : [];
+
     questionsData[letter] = [{
       definition: question,
-      answer: answer,
-      ...(hint && { hint: hint })
+      answers: answers,
+      ...(hints.length > 0 && { hints: hints })
     }];
   }
 
