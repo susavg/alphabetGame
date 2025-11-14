@@ -32,12 +32,14 @@ async function testAuthentication() {
     if (response.ok) {
       document.getElementById('authScreen').classList.add('hidden');
       document.getElementById('adminPanel').classList.remove('hidden');
-      loadChallenges();
+      loadExistingChallenges();
+      loadActiveChallengeForm();
     } else {
       // Public endpoint, so we're authenticated
       document.getElementById('authScreen').classList.add('hidden');
       document.getElementById('adminPanel').classList.remove('hidden');
-      loadChallenges();
+      loadExistingChallenges();
+      loadActiveChallengeForm();
     }
   } catch (error) {
     console.error('Auth test error:', error);
@@ -207,7 +209,7 @@ async function uploadChallenge() {
     if (response.ok) {
       showUploadMessage(`✅ Challenge uploaded successfully! <a href="${result.challengeUrl}" target="_blank">View Challenge</a>`, 'success');
       document.getElementById('uploadForm').reset();
-      loadChallenges();
+      loadExistingChallenges();
     } else {
       showUploadMessage('❌ Upload failed: ' + result.error, 'error');
     }
@@ -221,92 +223,7 @@ function showUploadMessage(message, type = 'info') {
   messageDiv.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
 }
 
-// Load and display challenges
-async function loadChallenges() {
-  const container = document.getElementById('challengesList');
-  container.innerHTML = '<div class="alert alert-info">Loading challenges... <span class="loading"></span></div>';
-
-  try {
-    const response = await fetch(`${API_BASE}/api/list-challenges`);
-    const result = await response.json();
-
-    if (response.ok && result.challenges) {
-      updateStats(result.challenges.length);
-      displayChallenges(result.challenges);
-    } else {
-      container.innerHTML = '<div class="alert alert-error">Failed to load challenges</div>';
-    }
-  } catch (error) {
-    container.innerHTML = `<div class="alert alert-error">Error: ${error.message}</div>`;
-  }
-}
-
-function updateStats(totalChallenges) {
-  const statsContainer = document.getElementById('statsContainer');
-  statsContainer.innerHTML = `
-    <div class="stats">
-      <div class="stat-card">
-        <div class="number">${totalChallenges}</div>
-        <div class="label">Total Challenges</div>
-      </div>
-      <div class="stat-card">
-        <div class="number">26</div>
-        <div class="label">Questions per Challenge</div>
-      </div>
-      <div class="stat-card">
-        <div class="number">${totalChallenges * 26}</div>
-        <div class="label">Total Questions</div>
-      </div>
-    </div>
-  `;
-}
-
-function displayChallenges(challenges) {
-  const container = document.getElementById('challengesList');
-
-  if (challenges.length === 0) {
-    container.innerHTML = '<div class="alert alert-info">No challenges found. Upload your first challenge above!</div>';
-    return;
-  }
-
-  const html = `
-    <div class="challenges-grid">
-      ${challenges.map(challenge => `
-        <div class="challenge-card">
-          <h3>${challenge.title || 'Untitled Challenge'}</h3>
-          <div class="slug">${challenge.slug}</div>
-          <p>${challenge.subtitle || ''}</p>
-
-          <div class="challenge-files">
-            ${challenge.files && challenge.files.length > 0 ? `
-              <strong>Files:</strong>
-              ${challenge.files.map(file => `
-                <div>📄 ${file.name} (${formatBytes(file.size)})</div>
-              `).join('')}
-            ` : '<div>No files in Blob Storage (using local files)</div>'}
-          </div>
-
-          <div class="challenge-actions">
-            <button class="success" onclick="viewChallenge('${challenge.slug}')">👁️ View</button>
-            <button class="warning" onclick="downloadChallenge('${challenge.slug}')">📥 Download</button>
-            <button class="danger" onclick="deleteChallenge('${challenge.slug}')">🗑️ Delete</button>
-          </div>
-        </div>
-      `).join('')}
-    </div>
-  `;
-
-  container.innerHTML = html;
-}
-
 // Helper functions
-function formatBytes(bytes) {
-  if (bytes === 0) return '0 Bytes';
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
-}
 
 function readFileAsText(file) {
   return new Promise((resolve, reject) => {
@@ -322,36 +239,6 @@ function readFileAsText(file) {
 // async function downloadExistingChallenge() {...}
 // These functions are no longer needed as we use direct links to GitHub and local files
 
-async function downloadChallenge(slug) {
-  try {
-    const response = await fetch(`${API_BASE}/api/get-challenge?slug=${slug}`);
-    const result = await response.json();
-
-    if (!response.ok) {
-      alert('Error: ' + result.error);
-      return;
-    }
-
-    // Download each JSON file
-    for (const [filename, fileData] of Object.entries(result.files)) {
-      if (filename.endsWith('.json') && fileData.content) {
-        const blob = new Blob([JSON.stringify(fileData.content, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${slug}-${filename}`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }
-    }
-
-    alert(`Downloaded files for challenge: ${slug}`);
-  } catch (error) {
-    alert('Error downloading challenge: ' + error.message);
-  }
-}
 
 // View challenge
 function viewChallenge(slug) {
