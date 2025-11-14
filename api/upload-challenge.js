@@ -80,6 +80,7 @@ export default async function handler(req, res) {
       const blob = await put(`challenges/${slug}/questions.json`, questionsContent, {
         access: 'public',
         contentType: 'application/json',
+        addRandomSuffix: false, // Keep same URL for updates
       });
       uploadedFiles.questions = blob.url;
     }
@@ -99,6 +100,7 @@ export default async function handler(req, res) {
       const blob = await put(`challenges/${slug}/preview.json`, previewContent, {
         access: 'public',
         contentType: 'application/json',
+        addRandomSuffix: false, // Keep same URL for updates
       });
       uploadedFiles.preview = blob.url;
     }
@@ -163,6 +165,8 @@ export default async function handler(req, res) {
       const catalogBlob = await put('catalog.json', JSON.stringify(catalog, null, 2), {
         access: 'public',
         contentType: 'application/json',
+        addRandomSuffix: false, // Keep same URL for updates
+        cacheControlMaxAge: 0, // Disable caching to always get latest version
       });
       console.log('Catalog saved to blob storage:', catalogBlob.url);
     } catch (e) {

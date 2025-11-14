@@ -45,7 +45,11 @@ export default async function handler(req, res) {
       const { head } = await import('@vercel/blob');
       const blobInfo = await head('catalog.json');
       if (blobInfo) {
-        const response = await fetch(blobInfo.url);
+        // Add cache-busting to ensure fresh data
+        const response = await fetch(blobInfo.url, {
+          cache: 'no-store',
+          headers: { 'Cache-Control': 'no-cache' }
+        });
         const blobCatalog = await response.json();
         // Merge blob catalog with local (blob takes precedence)
         catalog = { ...catalog, ...blobCatalog };
@@ -69,8 +73,11 @@ export default async function handler(req, res) {
     // Load questions
     try {
       if (questionsPath.startsWith('http')) {
-        // Fetch from URL
-        const response = await fetch(questionsPath);
+        // Fetch from URL with cache-busting
+        const response = await fetch(questionsPath, {
+          cache: 'no-store',
+          headers: { 'Cache-Control': 'no-cache' }
+        });
         files.questions = await response.text();
       } else {
         // Load from local file
