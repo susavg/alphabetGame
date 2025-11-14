@@ -117,9 +117,9 @@ button{
   box-shadow: var(--shadow-1);
   transition: transform var(--tr), box-shadow var(--tr), background var(--tr), opacity var(--tr);
 }
-button:hover{ transform: translateY(-1px); box-shadow: var(--shadow-2); }
-button:active{ transform: translateY(0); }
-button:disabled{ opacity:.55; cursor:not-allowed; box-shadow:none; }
+button:hover:not(:disabled){ transform: translateY(-1px); box-shadow: var(--shadow-2); }
+button:active:not(:disabled){ transform: translateY(0); }
+button:disabled{ opacity:.55; cursor:not-allowed; box-shadow:none; transform: none; }
 .btn-pass{ background: linear-gradient(135deg, var(--warning), #e67300); }
 
 /* Submit button should be green (success color) */
