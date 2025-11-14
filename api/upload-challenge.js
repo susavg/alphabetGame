@@ -40,8 +40,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Parse multipart form data
-    const formidable = require('formidable');
+    // Parse multipart form data using dynamic import for ES modules
+    const formidable = (await import('formidable')).default;
     const form = formidable({ multiples: true });
 
     const [fields, files] = await new Promise((resolve, reject) => {
