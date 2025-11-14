@@ -476,6 +476,8 @@ showHintToast(text){
 
   updateGame(){
     const hasRemaining = this.remainingWords.length > 0;
+    // Ensure currentIndex is within bounds
+    if(hasRemaining && this.currentIndex >= this.remainingWords.length) this.currentIndex = 0;
     const cur = hasRemaining ? this.remainingWords[this.currentIndex] : null;
   
     /* 1) Rosco: mark the current letter */
@@ -516,7 +518,12 @@ showHintToast(text){
     const inputEl=document.getElementById('answer');
     const val=inputEl.value.trim(); if(!val) return;
 
+    // Ensure currentIndex is valid
+    if(this.currentIndex >= this.remainingWords.length) this.currentIndex = 0;
+
     const cur=this.remainingWords[this.currentIndex];
+    if(!cur){ console.error('No current word at index', this.currentIndex); return; }
+
     const letter=cur.letter;
     const idx=this.words.findIndex(w=>w.letter===letter);
     const letters=document.querySelectorAll('.letter');
@@ -524,6 +531,19 @@ showHintToast(text){
     this.userAnswers[letter]=val;
 
     const ok = checkAnswer(val, cur.answers, this.config.gameSettings.fuzzyMatching);
+
+    // Check if this question was previously passed
+    const wasPassed = this.pasapalabraUsed.includes(letter);
+    if(wasPassed){
+      // Remove from passed list and reverse the pass penalty
+      const passIdx = this.pasapalabraUsed.indexOf(letter);
+      this.pasapalabraUsed.splice(passIdx, 1);
+      this.pasapalabraCount--;
+      if(!this.isPreviewMode){
+        this.pasapalabraPoints -= this.config.gameSettings.scoring.pasapalabra;
+        this.totalPoints -= this.config.gameSettings.scoring.pasapalabra;
+      }
+    }
 
     // Remove ALL previous state classes before applying new state
     letters[idx].classList.remove('current', 'passed', 'correct', 'incorrect');
