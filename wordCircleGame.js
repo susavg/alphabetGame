@@ -234,40 +234,58 @@ showHintToast(text){
   }
 
   setupEventListeners(){
-    // Enter still works
-    document.getElementById('answer').addEventListener('keyup', (e) => {
-      if (e.key === 'Enter' && !this.gameEnded) this.checkAnswer();
-    });
-  
+    const inputEl = document.getElementById('answer');
+    const btnSubmit = document.getElementById('btnSubmit');
+    const btnPass = document.getElementById('btnPass');
+
+    // Disable submit button initially
+    if(btnSubmit) btnSubmit.disabled = true;
+
+    // Enable/disable submit button based on input value
+    if(inputEl && btnSubmit){
+      inputEl.addEventListener('input', () => {
+        btnSubmit.disabled = !inputEl.value.trim();
+      });
+    }
+
+    // Enter key - only submit if there's a value
+    if(inputEl){
+      inputEl.addEventListener('keyup', (e) => {
+        if (e.key === 'Enter' && !this.gameEnded && inputEl.value.trim()) {
+          this.checkAnswer();
+        }
+      });
+    }
+
     // Keep your resize & sticky bar listeners
     window.addEventListener('resize', () => this.recalculateRoscoPositions());
     this.setupStickyActionBar();
-  
-    // --- Fast, reliable tap handlers so iOS doesn't swallow the first tap ---
-    const fastTap = (el, handler) => {
-        if (!el) return;
-        let locked = false;
-        const run = (e) => {
-        e.preventDefault();            // don't let iOS treat it as "dismiss keyboard"
-        e.stopPropagation();
-        if (locked) return;            // avoid duplicate firing (click + touchend)
-        locked = true;
-        handler();
-        setTimeout(() => (locked = false), 50);
-        };
-        el.addEventListener('pointerup', run, { passive: false });
-        el.addEventListener('touchend',  run, { passive: false });
-        el.addEventListener('click',     run);
-    };
-    
-    fastTap(document.getElementById('btnSubmit'), () => this.checkAnswer());
-    fastTap(document.getElementById('btnPass'),   () => this.pasapalabra());
 
-    // submit via Enter/Done key or tapping the submit button
+    // Simple click handlers for buttons
+    if(btnSubmit){
+      btnSubmit.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Submit button clicked');
+        this.checkAnswer();
+      });
+    }
+
+    if(btnPass){
+      btnPass.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('Pass button clicked');
+        this.pasapalabra();
+      });
+    }
+
+    // submit via Enter key
     const form = document.getElementById('answerForm');
     form?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (!this.gameEnded) this.checkAnswer();
+      e.preventDefault();
+      console.log('Form submitted via Enter');
+      if (!this.gameEnded) this.checkAnswer();
     });
   }
 
