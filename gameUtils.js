@@ -243,7 +243,10 @@ async function loadConfig(configFile = 'config.json') {
  */
 async function loadQuestions(questionsFile) {
     try {
-        const response = await fetch(questionsFile);
+        const response = await fetch(questionsFile, {
+            cache: 'no-store',
+            headers: { 'Cache-Control': 'no-cache' }
+        });
         if (!response.ok) {
             throw new Error(`Failed to load questions: ${response.statusText}`);
         }

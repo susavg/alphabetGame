@@ -1,5 +1,5 @@
 /* ---------- helpers ---------- */
-async function fetchJSON(path){ const r=await fetch(path); if(!r.ok) throw new Error(`${path}: ${r.status}`); return r.json(); }
+async function fetchJSON(path){ const r=await fetch(path, { cache: 'no-store', headers: { 'Cache-Control': 'no-cache' } }); if(!r.ok) throw new Error(`${path}: ${r.status}`); return r.json(); }
 const withBase=(base,p)=>!p||/^https?:|^\//.test(p)?p:`${(base||'').replace(/\/$/,'')}/${p}`;
 const deepMerge=(t,s)=>{ if(!s||typeof s!=='object') return t; for(const k of Object.keys(s)){ const sv=s[k], tv=t[k]; t[k]=sv&&typeof sv==='object'&&!Array.isArray(sv)?deepMerge(tv&&typeof tv==='object'?tv:{},sv):Array.isArray(sv)?sv.slice():sv;} return t; };
 
