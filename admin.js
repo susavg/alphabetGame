@@ -6,6 +6,10 @@
 let adminPassword = '';
 const API_BASE = window.location.origin;
 
+// Global variables for challenge editor
+let currentEditingChallenge = null;
+let currentEditorView = 'form'; // 'form' or 'json'
+
 // Authentication
 function authenticate() {
   const password = document.getElementById('adminPassword').value;
@@ -71,12 +75,6 @@ window.addEventListener('load', () => {
     document.getElementById('adminPassword').value = savedPassword;
     testAuthentication();
   }
-});
-
-// Upload Form Handler
-document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  await uploadChallenge();
 });
 
 async function uploadChallenge() {
@@ -427,9 +425,6 @@ async function downloadChallenge(slug) {
 }
 
 // Challenge Editor Functions
-let currentEditingChallenge = null;
-let currentEditorView = 'form'; // 'form' or 'json'
-
 function openChallengeEditor(slug = null) {
   currentEditingChallenge = slug;
   const modal = document.getElementById('challengeEditorModal');
