@@ -24,8 +24,27 @@ export default async function handler(req, res) {
     const catalogPath = join(process.cwd(), 'catalog.json');
     let catalog = { challenges: {} };
 
+    // Try to read from local file system first
     if (existsSync(catalogPath)) {
-      catalog = JSON.parse(readFileSync(catalogPath, 'utf-8'));
+      try {
+        catalog = JSON.parse(readFileSync(catalogPath, 'utf-8'));
+      } catch (e) {
+        console.log('Could not read local catalog.json:', e.message);
+      }
+    }
+
+    // Also try to fetch from blob storage (for production)
+    try {
+      const { head } = await import('@vercel/blob');
+      const blobInfo = await head('catalog.json');
+      if (blobInfo) {
+        const response = await fetch(blobInfo.url);
+        const blobCatalog = await response.json();
+        // Merge blob catalog with local (blob takes precedence)
+        catalog = { ...catalog, ...blobCatalog };
+      }
+    } catch (e) {
+      console.log('No catalog in blob storage:', e.message);
     }
 
     // Try to get blobs if Blob Storage is configured

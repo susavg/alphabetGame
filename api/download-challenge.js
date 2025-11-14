@@ -3,7 +3,7 @@
  * Downloads questions.json and preview.json as a ZIP file
  */
 
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
 export default async function handler(req, res) {
@@ -29,7 +29,30 @@ export default async function handler(req, res) {
   try {
     // Load catalog to get challenge info
     const catalogPath = join(process.cwd(), 'catalog.json');
-    const catalog = JSON.parse(readFileSync(catalogPath, 'utf-8'));
+    let catalog = { challenges: {} };
+
+    // Try to read from local file system first
+    if (existsSync(catalogPath)) {
+      try {
+        catalog = JSON.parse(readFileSync(catalogPath, 'utf-8'));
+      } catch (e) {
+        console.log('Could not read local catalog.json:', e.message);
+      }
+    }
+
+    // Also try to fetch from blob storage (for production)
+    try {
+      const { head } = await import('@vercel/blob');
+      const blobInfo = await head('catalog.json');
+      if (blobInfo) {
+        const response = await fetch(blobInfo.url);
+        const blobCatalog = await response.json();
+        // Merge blob catalog with local (blob takes precedence)
+        catalog = { ...catalog, ...blobCatalog };
+      }
+    } catch (e) {
+      console.log('No catalog in blob storage:', e.message);
+    }
 
     const challenge = catalog.challenges?.[slug];
     if (!challenge) {

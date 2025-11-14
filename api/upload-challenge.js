@@ -116,12 +116,31 @@ export default async function handler(req, res) {
       uploadedFiles.logo = blob.url;
     }
 
-    // Update catalog.json
+    // Update catalog - try local file first, fall back to blob storage
     const catalogPath = join(process.cwd(), 'catalog.json');
     let catalog = {};
 
+    // Try to read from local file system (works in local dev)
     if (existsSync(catalogPath)) {
-      catalog = JSON.parse(readFileSync(catalogPath, 'utf-8'));
+      try {
+        catalog = JSON.parse(readFileSync(catalogPath, 'utf-8'));
+      } catch (e) {
+        console.log('Could not read local catalog.json:', e.message);
+      }
+    }
+
+    // Also try to fetch from blob storage (for production)
+    try {
+      const { head } = await import('@vercel/blob');
+      const blobInfo = await head('catalog.json');
+      if (blobInfo) {
+        const response = await fetch(blobInfo.url);
+        const blobCatalog = await response.json();
+        // Merge blob catalog with local (blob takes precedence)
+        catalog = { ...catalog, ...blobCatalog };
+      }
+    } catch (e) {
+      console.log('No existing catalog in blob storage:', e.message);
     }
 
     if (!catalog.challenges) {
@@ -139,8 +158,24 @@ export default async function handler(req, res) {
       ...configData,
     };
 
-    // Write updated catalog
-    writeFileSync(catalogPath, JSON.stringify(catalog, null, 2));
+    // Save catalog to blob storage (production)
+    try {
+      const catalogBlob = await put('catalog.json', JSON.stringify(catalog, null, 2), {
+        access: 'public',
+        contentType: 'application/json',
+      });
+      console.log('Catalog saved to blob storage:', catalogBlob.url);
+    } catch (e) {
+      console.error('Failed to save catalog to blob storage:', e);
+    }
+
+    // Try to save to local file system (for local dev)
+    try {
+      writeFileSync(catalogPath, JSON.stringify(catalog, null, 2));
+      console.log('Catalog saved to local file system');
+    } catch (e) {
+      console.log('Could not write to local file system (expected in production):', e.message);
+    }
 
     return res.status(200).json({
       success: true,
