@@ -546,7 +546,6 @@ function openChallengeEditor(slug = null) {
   currentEditingChallenge = slug;
   const modal = document.getElementById('challengeEditorModal');
   const title = document.getElementById('editorTitle');
-  const questionsEditor = document.getElementById('questionsEditor');
 
   if (slug) {
     title.textContent = 'Edit Challenge';
@@ -575,22 +574,45 @@ function renderQuestionsEditor(questionsData = {}) {
     const letterData = questionsData[letter] || [{ definition: '', answer: '', hint: '' }];
     const firstQuestion = letterData[0] || { definition: '', answer: '', hint: '' };
 
+    // Handle both old format (single answer string) and new format (answers array)
+    let answerValue = '';
+    if (firstQuestion.answer) {
+      answerValue = firstQuestion.answer;
+    } else if (firstQuestion.answers && Array.isArray(firstQuestion.answers)) {
+      answerValue = firstQuestion.answers[0] || '';
+    }
+
+    // Handle hints - can be string or array
+    let hintValue = '';
+    if (typeof firstQuestion.hint === 'string') {
+      hintValue = firstQuestion.hint;
+    } else if (firstQuestion.hints && Array.isArray(firstQuestion.hints)) {
+      hintValue = firstQuestion.hints[0] || '';
+    }
+
+    // Escape HTML to prevent issues with quotes
+    const escapeHtml = (text) => {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    };
+
     return `
       <div style="background: #f5f5f5; padding: 1rem; margin-bottom: 1rem; border-radius: 4px; border-left: 4px solid #E30613;">
         <h4 style="margin: 0 0 0.75rem; color: #E30613;">Letter ${letter}</h4>
         <div style="display: grid; gap: 0.75rem;">
           <div>
             <label style="font-size: 0.875rem; font-weight: 500;">Question/Definition *</label>
-            <textarea id="question_${letter}" rows="2" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; font-family: inherit;" placeholder="e.g., European country starting with ${letter}">${firstQuestion.definition || ''}</textarea>
+            <textarea id="question_${letter}" rows="2" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; font-family: inherit;" placeholder="e.g., European country starting with ${letter}">${escapeHtml(firstQuestion.definition || '')}</textarea>
           </div>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
             <div>
               <label style="font-size: 0.875rem; font-weight: 500;">Answer *</label>
-              <input type="text" id="answer_${letter}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;" placeholder="e.g., Austria" value="${firstQuestion.answer || ''}">
+              <input type="text" id="answer_${letter}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;" placeholder="e.g., Austria" value="${escapeHtml(answerValue)}">
             </div>
             <div>
               <label style="font-size: 0.875rem; font-weight: 500;">Hint (optional)</label>
-              <input type="text" id="hint_${letter}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;" placeholder="e.g., Alpine country" value="${firstQuestion.hint || ''}">
+              <input type="text" id="hint_${letter}" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;" placeholder="e.g., Alpine country" value="${escapeHtml(hintValue)}">
             </div>
           </div>
         </div>
