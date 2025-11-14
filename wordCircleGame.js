@@ -540,8 +540,11 @@ showHintToast(text){
       this.pasapalabraUsed.splice(passIdx, 1);
       this.pasapalabraCount--;
       if(!this.isPreviewMode){
-        this.pasapalabraPoints -= this.config.gameSettings.scoring.pasapalabra;
-        this.totalPoints -= this.config.gameSettings.scoring.pasapalabra;
+        const penalty = this.config.gameSettings.scoring.pasapalabra;
+        console.log('Reversing pass penalty:', penalty, 'Total before:', this.totalPoints);
+        this.pasapalabraPoints -= penalty;
+        this.totalPoints -= penalty;
+        console.log('Total after reversing penalty:', this.totalPoints);
       }
     }
 
@@ -552,7 +555,13 @@ showHintToast(text){
       playSound('correct'); showFeedback(true, letters[idx]);
       letters[idx].classList.add('correct');
       this.correctAnswers++; this.answeredWords[idx]=true;
-      if(!this.isPreviewMode){ this.correctPoints += this.config.gameSettings.scoring.correct; this.totalPoints += this.config.gameSettings.scoring.correct; }
+      if(!this.isPreviewMode){
+        const correctScore = this.config.gameSettings.scoring.correct;
+        console.log('Adding correct score:', correctScore, 'Total before:', this.totalPoints);
+        this.correctPoints += correctScore;
+        this.totalPoints += correctScore;
+        console.log('Total after correct score:', this.totalPoints);
+      }
     }else{
       if(this.config.gameSettings.fuzzyMatching?.enabled){
         const wasClose = cur.answers.some(a=>{
