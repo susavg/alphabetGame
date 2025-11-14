@@ -111,8 +111,8 @@ showHintToast(text){
   async init(){
     document.getElementById('loadingScreen').style.display='flex';
 
-    // catalog + defaults
-    this.catalog = await fetchJSON('catalog.json');
+    // catalog + defaults - use API endpoint to get fresh catalog with blob URLs
+    this.catalog = await fetchJSON('/api/catalog');
     this.defaultNode = this.catalog.default;
 
     // routing
