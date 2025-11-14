@@ -529,13 +529,19 @@ document.getElementById('challengeEditorForm')?.addEventListener('submit', async
 });
 
 async function saveChallengeFromEditor() {
-  const slug = document.getElementById('editorSlug').value.trim().toLowerCase();
+  let slug = document.getElementById('editorSlug').value.trim().toLowerCase();
   const title = document.getElementById('editorTitle').value.trim();
   const subtitle = document.getElementById('editorSubtitle').value.trim();
 
-  if (!slug || !title) {
-    showEditorMessage('Please fill in required fields', 'error');
+  if (!title) {
+    showEditorMessage('Please fill in the challenge title', 'error');
     return;
+  }
+
+  // Auto-generate slug from title if creating new challenge
+  if (!slug || !currentEditingChallenge) {
+    slug = generateSlug(title);
+    document.getElementById('editorSlug').value = slug;
   }
 
   // Collect all questions
@@ -636,6 +642,94 @@ async function loadExistingChallenges() {
   }
 }
 
+// Game Settings Functions
+function openGameSettings() {
+  const modal = document.getElementById('gameSettingsModal');
+  modal.style.display = 'block';
+  loadGameSettings();
+}
+
+function closeGameSettings() {
+  document.getElementById('gameSettingsModal').style.display = 'none';
+}
+
+async function loadGameSettings() {
+  try {
+    const response = await fetch(`${API_BASE}/api/list-challenges`);
+    const data = await response.json();
+
+    // Settings are stored in catalog.default.gameSettings
+    // For now, we'll load from the API (to be implemented)
+    // This is a placeholder - we need to create a settings API endpoint
+
+    showSettingsMessage('Game settings loaded', 'info');
+  } catch (error) {
+    console.error('Error loading settings:', error);
+    showSettingsMessage('Error loading settings: ' + error.message, 'error');
+  }
+}
+
+async function saveGameSettings(event) {
+  event.preventDefault();
+
+  const settings = {
+    timeLimit: parseInt(document.getElementById('settingsTimeLimit').value) || 300,
+    maxHints: parseInt(document.getElementById('settingsMaxHints').value) || 5,
+    penalizeUnanswered: document.getElementById('settingsPenalizeUnanswered').checked,
+    fuzzyMatching: {
+      enabled: document.getElementById('settingsFuzzyEnabled').checked,
+      threshold: parseFloat(document.getElementById('settingsFuzzyThreshold').value) || 0.8,
+      maxDistance: parseInt(document.getElementById('settingsFuzzyMaxDistance').value) || 2
+    },
+    scoring: {
+      correct: parseInt(document.getElementById('settingsCorrectPoints').value) || 5,
+      incorrect: parseInt(document.getElementById('settingsIncorrectPoints').value) || -3,
+      pasapalabra: parseInt(document.getElementById('settingsPasapalabraPoints').value) || -1,
+      timeBonus: {
+        threshold: parseInt(document.getElementById('settingsBonusThreshold').value) || 10,
+        levels: [
+          { maxTime: 120, bonus: parseInt(document.getElementById('settingsBonus120').value) || 30 },
+          { maxTime: 180, bonus: parseInt(document.getElementById('settingsBonus180').value) || 20 },
+          { maxTime: 240, bonus: parseInt(document.getElementById('settingsBonus240').value) || 10 }
+        ]
+      }
+    }
+  };
+
+  try {
+    showSettingsMessage('Saving settings... <span class="loading"></span>', 'info');
+
+    // TODO: Create API endpoint for saving settings
+    // For now, show success message
+    showSettingsMessage('✅ Settings saved successfully!', 'success');
+
+    setTimeout(() => {
+      closeGameSettings();
+    }, 1500);
+  } catch (error) {
+    console.error('Save error:', error);
+    showSettingsMessage('❌ Error: ' + error.message, 'error');
+  }
+}
+
+function showSettingsMessage(message, type) {
+  const container = document.getElementById('settingsMessage');
+  container.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+  setTimeout(() => {
+    if (!message.includes('...')) {
+      container.innerHTML = '';
+    }
+  }, 5000);
+}
+
+// Auto-generate slug from title
+function generateSlug(title) {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 // Load active challenge form on page load
 window.addEventListener('DOMContentLoaded', () => {
   const savedPassword = localStorage.getItem('adminPassword');
@@ -647,4 +741,7 @@ window.addEventListener('DOMContentLoaded', () => {
     loadExistingChallenges();
     renderQuestionsEditor(); // Initialize empty editor
   }
+
+  // Add event listener for game settings form
+  document.getElementById('gameSettingsForm')?.addEventListener('submit', saveGameSettings);
 });

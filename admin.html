@@ -396,6 +396,16 @@
       <!-- Stats -->
       <div id="statsContainer"></div>
 
+      <!-- Game Settings Section -->
+      <div class="template-section">
+        <h2>⚙️ Game Settings</h2>
+        <p style="margin-bottom: 1rem;">Configure global game settings (time limits, scoring, bonuses, penalties)</p>
+
+        <button type="button" onclick="openGameSettings()" style="background: rgba(255,255,255,0.3); backdrop-filter: blur(10px); color: white; border: none; padding: 1rem 2rem; border-radius: 4px; font-weight: 500; cursor: pointer;">
+          🎮 Edit Game Settings
+        </button>
+      </div>
+
       <!-- Manage Challenges Section -->
       <div class="template-section">
         <h2>📝 Manage Challenges</h2>
@@ -425,11 +435,7 @@
           <div id="editorMessage"></div>
 
           <form id="challengeEditorForm">
-            <div class="form-group">
-              <label for="editorSlug">Challenge ID (slug) *</label>
-              <input type="text" id="editorSlug" placeholder="e.g., sales-directors-2025" required pattern="[a-z0-9-]+">
-              <div class="help-text">Lowercase letters, numbers, and hyphens only. This will be used in the URL.</div>
-            </div>
+            <input type="hidden" id="editorSlug">
 
             <div class="form-group">
               <label for="editorTitle">Challenge Title *</label>
@@ -452,137 +458,115 @@
         </div>
       </div>
 
-      <!-- Old Upload Form (Keep for file-based upload if needed) -->
-      <div class="card">
-        <h2>⬆️ Upload New Challenge</h2>
-        <div id="uploadMessage"></div>
-
-        <form id="uploadForm">
-          <div class="form-group">
-            <label for="challengeSlug">Challenge Slug (URL identifier) *</label>
-            <input type="text" id="challengeSlug" placeholder="e.g., sales-directors-2025" required pattern="[a-z0-9-]+">
-            <div class="help-text">Use lowercase letters, numbers, and hyphens only</div>
+      <!-- Game Settings Modal -->
+      <div id="gameSettingsModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 10000; overflow-y: auto; padding: 20px;">
+        <div style="background: white; border-radius: 8px; max-width: 900px; margin: 0 auto; padding: 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h2 style="margin: 0; color: #E30613;">⚙️ Game Settings</h2>
+            <button onclick="closeGameSettings()" style="background: #6c757d; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">
+              ✕ Close
+            </button>
           </div>
 
-          <div class="form-group">
-            <label for="challengeTitle">Challenge Title *</label>
-            <input type="text" id="challengeTitle" placeholder="e.g., EU Sales Directors Meeting 2025" required>
-          </div>
+          <div id="settingsMessage"></div>
 
-          <div class="form-group">
-            <label for="challengeSubtitle">Subtitle</label>
-            <input type="text" id="challengeSubtitle" placeholder="e.g., The Alphabet Game">
-          </div>
+          <form id="gameSettingsForm">
+            <h3 style="margin: 1.5rem 0 1rem; color: #E30613;">⏱️ Game Configuration</h3>
 
-          <div class="form-group">
-            <label for="questionsFile">Questions File (questions.json) *</label>
-            <input type="file" id="questionsFile" accept=".json" required>
-            <div class="help-text">26 questions (A-Z) with definitions, answers, and hints</div>
-          </div>
+            <div class="form-group">
+              <label for="settingsTimeLimit">Time Limit (seconds)</label>
+              <input type="number" id="settingsTimeLimit" placeholder="300" min="60" max="3600">
+              <div class="help-text">Default: 300 seconds (5 minutes)</div>
+            </div>
 
-          <div class="form-group">
-            <label for="previewFile">Preview File (preview.json)</label>
-            <input type="file" id="previewFile" accept=".json">
-            <div class="help-text">Optional: Simpler questions for preview mode</div>
-          </div>
+            <div class="form-group">
+              <label for="settingsMaxHints">Maximum Hints</label>
+              <input type="number" id="settingsMaxHints" placeholder="5" min="0" max="26">
+              <div class="help-text">Default: 5 hints per game</div>
+            </div>
 
-          <div class="form-group">
-            <label for="logoFile">Logo File</label>
-            <input type="file" id="logoFile" accept="image/*">
-            <div class="help-text">Optional: SVG or PNG logo for the challenge</div>
-          </div>
+            <div class="form-group">
+              <label>
+                <input type="checkbox" id="settingsPenalizeUnanswered">
+                Penalize Unanswered Questions
+              </label>
+              <div class="help-text">Apply penalty for questions left unanswered at the end</div>
+            </div>
 
-          <div class="form-group">
-            <label for="timeLimit">Time Limit (seconds)</label>
-            <input type="number" id="timeLimit" placeholder="300" min="60" max="3600">
-            <div class="help-text">Default: 300 seconds (5 minutes)</div>
-          </div>
+            <h3 style="margin: 1.5rem 0 1rem; color: #E30613;">🎯 Fuzzy Matching</h3>
 
-          <div class="form-group">
-            <label for="maxHints">Maximum Hints</label>
-            <input type="number" id="maxHints" placeholder="5" min="0" max="26">
-            <div class="help-text">Default: 5 hints per game</div>
-          </div>
+            <div class="form-group">
+              <label>
+                <input type="checkbox" id="settingsFuzzyEnabled" checked>
+                Enable Fuzzy Matching
+              </label>
+              <div class="help-text">Accept similar answers with typos or slight variations</div>
+            </div>
 
-          <div class="form-group">
-            <label>
-              <input type="checkbox" id="fuzzyMatchingEnabled" checked>
-              Enable Fuzzy Matching
-            </label>
-            <div class="help-text">Accepts similar answers (e.g., typos, close matches)</div>
-          </div>
+            <div class="form-group">
+              <label for="settingsFuzzyThreshold">Similarity Threshold</label>
+              <input type="number" id="settingsFuzzyThreshold" placeholder="0.8" min="0" max="1" step="0.1">
+              <div class="help-text">Default: 0.8 (80% similarity required)</div>
+            </div>
 
-          <div class="form-group">
-            <label for="fuzzyThreshold">Fuzzy Matching Threshold</label>
-            <input type="number" id="fuzzyThreshold" placeholder="0.8" min="0" max="1" step="0.1">
-            <div class="help-text">Default: 0.8 (80% similarity required)</div>
-          </div>
+            <div class="form-group">
+              <label for="settingsFuzzyMaxDistance">Max Character Distance</label>
+              <input type="number" id="settingsFuzzyMaxDistance" placeholder="2" min="0" max="10">
+              <div class="help-text">Default: 2 (maximum character differences allowed)</div>
+            </div>
 
-          <div class="form-group">
-            <label for="fuzzyMaxDistance">Fuzzy Match Max Distance</label>
-            <input type="number" id="fuzzyMaxDistance" placeholder="2" min="0" max="10">
-            <div class="help-text">Default: 2 (maximum character differences)</div>
-          </div>
+            <h3 style="margin: 1.5rem 0 1rem; color: #E30613;">📊 Scoring</h3>
 
-          <div class="form-group">
-            <label>
-              <input type="checkbox" id="penalizeUnanswered">
-              Penalize Unanswered Questions
-            </label>
-            <div class="help-text">Default: disabled (no penalty for skipped questions)</div>
-          </div>
+            <div class="form-group">
+              <label for="settingsCorrectPoints">Points for Correct Answer</label>
+              <input type="number" id="settingsCorrectPoints" placeholder="5" min="0" max="100">
+              <div class="help-text">Default: 5 points</div>
+            </div>
 
-          <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary);">📊 Scoring Settings</h3>
+            <div class="form-group">
+              <label for="settingsIncorrectPoints">Points for Incorrect Answer (penalty)</label>
+              <input type="number" id="settingsIncorrectPoints" placeholder="-3" max="0">
+              <div class="help-text">Default: -3 points</div>
+            </div>
 
-          <div class="form-group">
-            <label for="correctPoints">Points for Correct Answer</label>
-            <input type="number" id="correctPoints" placeholder="5" min="0" max="100">
-            <div class="help-text">Default: 5 points</div>
-          </div>
+            <div class="form-group">
+              <label for="settingsPasapalabraPoints">Points for Passing (Pasapalabra)</label>
+              <input type="number" id="settingsPasapalabraPoints" placeholder="-1" max="0">
+              <div class="help-text">Default: -1 points</div>
+            </div>
 
-          <div class="form-group">
-            <label for="incorrectPoints">Points for Incorrect Answer</label>
-            <input type="number" id="incorrectPoints" placeholder="-3" min="-100" max="0">
-            <div class="help-text">Default: -3 points (penalty)</div>
-          </div>
+            <h3 style="margin: 1.5rem 0 1rem; color: #E30613;">⚡ Time Bonuses</h3>
 
-          <div class="form-group">
-            <label for="pasapalabraPoints">Points for Passing (Pasapalabra)</label>
-            <input type="number" id="pasapalabraPoints" placeholder="-1" min="-100" max="0">
-            <div class="help-text">Default: -1 points</div>
-          </div>
+            <div class="form-group">
+              <label for="settingsBonusThreshold">Minimum Correct Answers for Bonus</label>
+              <input type="number" id="settingsBonusThreshold" placeholder="10" min="0" max="26">
+              <div class="help-text">Default: 10 (must answer at least this many correctly to qualify)</div>
+            </div>
 
-          <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary);">⚡ Time Bonus Settings</h3>
+            <div class="form-group">
+              <label for="settingsBonus120">Bonus for < 120 seconds</label>
+              <input type="number" id="settingsBonus120" placeholder="30" min="0" max="100">
+              <div class="help-text">Default: 30 points</div>
+            </div>
 
-          <div class="form-group">
-            <label for="timeBonusThreshold">Time Bonus Threshold (questions)</label>
-            <input type="number" id="timeBonusThreshold" placeholder="10" min="0" max="26">
-            <div class="help-text">Default: 10 (minimum correct answers to qualify for time bonus)</div>
-          </div>
+            <div class="form-group">
+              <label for="settingsBonus180">Bonus for < 180 seconds</label>
+              <input type="number" id="settingsBonus180" placeholder="20" min="0" max="100">
+              <div class="help-text">Default: 20 points</div>
+            </div>
 
-          <div class="form-group">
-            <label for="timeBonus120">Bonus for completing under 120 seconds</label>
-            <input type="number" id="timeBonus120" placeholder="30" min="0" max="100">
-            <div class="help-text">Default: 30 points</div>
-          </div>
+            <div class="form-group">
+              <label for="settingsBonus240">Bonus for < 240 seconds</label>
+              <input type="number" id="settingsBonus240" placeholder="10" min="0" max="100">
+              <div class="help-text">Default: 10 points</div>
+            </div>
 
-          <div class="form-group">
-            <label for="timeBonus180">Bonus for completing under 180 seconds</label>
-            <input type="number" id="timeBonus180" placeholder="20" min="0" max="100">
-            <div class="help-text">Default: 20 points</div>
-          </div>
-
-          <div class="form-group">
-            <label for="timeBonus240">Bonus for completing under 240 seconds</label>
-            <input type="number" id="timeBonus240" placeholder="10" min="0" max="100">
-            <div class="help-text">Default: 10 points</div>
-          </div>
-
-          <div class="btn-group">
-            <button type="submit">🚀 Upload Challenge</button>
-            <button type="reset" class="secondary">Clear Form</button>
-          </div>
-        </form>
+            <div class="btn-group" style="margin-top: 2rem; position: sticky; bottom: 0; background: white; padding: 1rem 0; border-top: 2px solid #E0E0E0;">
+              <button type="submit">💾 Save Settings</button>
+              <button type="button" class="secondary" onclick="closeGameSettings()">Cancel</button>
+            </div>
+          </form>
+        </div>
       </div>
 
       <!-- Active Challenge Configuration -->
