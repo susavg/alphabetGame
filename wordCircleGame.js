@@ -618,9 +618,15 @@ showHintToast(text){
     // Move on
     this.remainingWords.splice(this.currentIndex,1);
 
-    // Collapse the keyboard after submit
-    inputEl.blur();               // <— important for #3
+    // Clear input and disable button BEFORE blur to prevent size change during click
     inputEl.value = '';
+    const btnSubmit = document.getElementById('btnSubmit');
+    if(btnSubmit) btnSubmit.disabled = true;
+
+    // Delay blur slightly to ensure click completes first
+    setTimeout(() => {
+      inputEl.blur();
+    }, 10);
 
     if(this.remainingWords.length===0) this.endGame();
     else {
