@@ -115,11 +115,17 @@ button{
   font-weight: 700; letter-spacing: .02em; text-transform: uppercase;
   color:#fff; background: linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 82%, #000));
   box-shadow: var(--shadow-1);
-  transition: transform var(--tr), box-shadow var(--tr), background var(--tr), opacity var(--tr);
+  transition: transform var(--tr), box-shadow var(--tr), background var(--tr);
 }
 button:hover:not(:disabled){ transform: translateY(-1px); box-shadow: var(--shadow-2); }
 button:active:not(:disabled){ transform: translateY(0); }
-button:disabled{ opacity:.55; cursor:not-allowed; box-shadow:none; transform: none; }
+button:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+  box-shadow:none;
+  transform: none;
+  pointer-events: none;
+}
 .btn-pass{ background: linear-gradient(135deg, var(--warning), #e67300); }
 
 /* Submit button should be green (success color) */
